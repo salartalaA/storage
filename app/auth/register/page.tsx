@@ -4,8 +4,8 @@ import RegisterPageForm from "@/components/auth/register/register-page-form";
 
 export default function RegisterPage() {
   return (
-    <main className="flex min-h-screen items-center justify-center overflow-hidden bg-background text-foreground">
-      <div className="w-full max-w-md rounded-2xl border border-border/60 bg-card p-9 shadow-card backdrop-blur-md">
+    <main className="mx-3 flex min-h-screen items-center justify-center overflow-hidden bg-background text-foreground sm:mx-0">
+      <div className="w-full max-w-md rounded-2xl border border-border/60 bg-card p-6 shadow-card backdrop-blur-md sm:p-9">
         <div className="flex flex-col items-center justify-center gap-3">
           <span className="rounded-xl bg-linear-to-br from-primary to-accent p-2.5">
             <Box className="stroke-2" />
