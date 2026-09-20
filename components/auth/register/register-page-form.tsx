@@ -7,6 +7,7 @@ import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 import zxcvbn from "zxcvbn";
+import { createStore } from "@/actions/auth";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -41,8 +42,12 @@ export default function RegisterPageForm() {
   const router = useRouter();
 
   const onsubmit = async (data: RegisterData) => {
-    await new Promise((resolver) => setTimeout(resolver, 500));
-    console.log(data);
+    const result = await createStore(data);
+
+    if (!result.success && result.error === "EMAIL_ALREADY_EXISTS") {
+      return toast.error("این ایمیل قبلا ثبت شده است!");
+    }
+
     toast.success("حساب ساخته شد!");
 
     router.push("/auth/login");
@@ -82,7 +87,7 @@ export default function RegisterPageForm() {
           id="storeEmail"
           placeholder="store@gmail.com"
           {...register("storeEmail")}
-          type="text"
+          type="email"
         />
         {errors.storeEmail ? (
           <div className="font-semibold text-destructive text-xs">
