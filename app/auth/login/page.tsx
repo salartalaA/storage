@@ -1,8 +1,16 @@
 import { ArrowLeft, Box } from "lucide-react";
 import Link from "next/link";
+import { redirect } from "next/navigation";
+import { getCurrentStore } from "@/actions/auth";
 import LoginPageForm from "@/components/auth/login/login-page-form";
 
-export default function LoginPage() {
+export default async function LoginPage() {
+  const currentStore = await getCurrentStore();
+
+  if (currentStore) {
+    return redirect("/");
+  }
+
   return (
     <main className="mx-3 flex min-h-screen items-center justify-center overflow-hidden bg-background text-foreground sm:mx-0">
       <div className="w-full max-w-md rounded-2xl border border-border/60 bg-card p-6 shadow-card backdrop-blur-md sm:p-9">

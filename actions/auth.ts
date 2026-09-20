@@ -97,3 +97,36 @@ export async function loginStore(data: LoginData) {
     success: true,
   };
 }
+
+export async function getCurrentStore() {
+  const cookieStore = await cookies();
+
+  const sessionId = cookieStore.get("session")?.value;
+
+  if (!sessionId) {
+    return null;
+  }
+
+  const session = await prisma.session.findUnique({
+    include: {
+      store: {
+        omit: {
+          password: true,
+        },
+      },
+    },
+    where: {
+      id: sessionId,
+    },
+  });
+
+  if (!session) {
+    return null;
+  }
+
+  if (session.expiresAt < new Date()) {
+    return null;
+  }
+
+  return session.store;
+}

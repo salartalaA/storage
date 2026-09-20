@@ -1,6 +1,14 @@
 import Image from "next/image";
+import { redirect } from "next/navigation";
+import { getCurrentStore } from "@/actions/auth";
 
-export default function Home() {
+export default async function Home() {
+  const currentStore = await getCurrentStore();
+
+  if (!currentStore) {
+    return redirect("/auth/login");
+  }
+
   return (
     <div className="flex flex-1 flex-col items-center justify-center bg-zinc-50 font-sans dark:bg-black">
       <main className="flex w-full max-w-3xl flex-1 flex-col items-center justify-between bg-white px-16 py-32 sm:items-start dark:bg-black">
