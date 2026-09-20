@@ -4,6 +4,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { Eye, EyeOff, Loader2 } from "lucide-react";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
+import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -25,6 +26,7 @@ export default function LoginPageForm() {
   const onsubmit = async (data: LoginData) => {
     await new Promise((resolver) => setTimeout(resolver, 500));
     console.log(data);
+    toast.success("خوش آمدید!");
   };
 
   return (
