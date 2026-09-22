@@ -12,7 +12,7 @@ export default async function LoginPage() {
   }
 
   return (
-    <main className="relative mx-3 flex min-h-screen items-center justify-center overflow-hidden bg-background text-foreground sm:mx-0">
+    <main className="relative flex min-h-screen items-center justify-center overflow-hidden bg-background px-3 text-foreground sm:px-0">
       {/* Ambient background */}
       <div className="pointer-events-none absolute inset-0 overflow-hidden">
         <div className="absolute -top-32 -left-32 size-96 rounded-full bg-primary/15 blur-[120px]" />
