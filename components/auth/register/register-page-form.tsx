@@ -19,7 +19,9 @@ export default function RegisterPageForm() {
     handleSubmit,
     register,
     watch,
-  } = useForm({ resolver: zodResolver(registerSchema) });
+  } = useForm({
+    resolver: zodResolver(registerSchema),
+  });
 
   const [showPassword, setShowPassword] = useState(false);
 
@@ -55,21 +57,27 @@ export default function RegisterPageForm() {
 
   return (
     <form
-      className="mt-6 flex flex-col gap-4"
+      className="mt-6 flex flex-col gap-5"
       onSubmit={handleSubmit(onsubmit)}
     >
-      <div className="flex flex-col gap-3">
-        <Label className="font-semibold" htmlFor="storeName">
+      {/* Store name */}
+      <div className="flex flex-col gap-2.5">
+        <Label
+          className="font-semibold text-foreground text-sm"
+          htmlFor="storeName"
+        >
           {"نام فروشگاه"}
         </Label>
+
         <Input
           autoComplete="off"
-          className="py-5"
+          className="h-11 rounded-xl border border-foreground/10 bg-foreground/[0.035] px-4 text-foreground shadow-black/10 shadow-inner backdrop-blur-md transition-all placeholder:text-muted-foreground focus:border-primary/40 focus:bg-foreground/6 focus:ring-2 focus:ring-primary/20"
           id="storeName"
           placeholder="افق کوروش"
           {...register("storeName")}
           type="text"
         />
+
         {errors.storeName ? (
           <div className="font-semibold text-destructive text-xs">
             {errors.storeName.message}
@@ -77,18 +85,25 @@ export default function RegisterPageForm() {
         ) : null}
       </div>
 
-      <div className="flex flex-col gap-3">
-        <Label className="font-semibold" htmlFor="storeEmail">
+      {/* Email */}
+      <div className="flex flex-col gap-2.5">
+        <Label
+          className="font-semibold text-foreground text-sm"
+          htmlFor="storeEmail"
+        >
           {"ایمیل فروشگاه"}
         </Label>
+
         <Input
           autoComplete="off"
-          className="py-5"
+          className="h-11 rounded-xl border border-foreground/10 bg-foreground/[0.035] px-4 text-foreground shadow-black/10 shadow-inner backdrop-blur-md transition-all placeholder:text-muted-foreground focus:border-primary/40 focus:bg-foreground/6 focus:ring-2 focus:ring-primary/20"
           id="storeEmail"
           placeholder="store@gmail.com"
           {...register("storeEmail")}
+          dir="ltr"
           type="email"
         />
+
         {errors.storeEmail ? (
           <div className="font-semibold text-destructive text-xs">
             {errors.storeEmail.message}
@@ -96,14 +111,20 @@ export default function RegisterPageForm() {
         ) : null}
       </div>
 
-      <div className="flex flex-col gap-3">
-        <Label className="font-semibold" htmlFor="storePassword">
+      {/* Password */}
+      <div className="flex flex-col gap-2.5">
+        <Label
+          className="font-semibold text-foreground text-sm"
+          htmlFor="storePassword"
+        >
           {"رمز عبور فروشگاه"}
         </Label>
+
         <div className="relative">
           <Input
             autoComplete="off"
-            className="py-5"
+            className="h-11 rounded-xl border border-foreground/10 bg-foreground/[0.035] px-4 pr-12 text-foreground shadow-black/10 shadow-inner backdrop-blur-md transition-all placeholder:text-muted-foreground focus:border-primary/40 focus:bg-foreground/6 focus:ring-2 focus:ring-primary/20"
+            dir="ltr"
             id="storePassword"
             {...register("storePassword")}
             placeholder="••••••••"
@@ -111,11 +132,11 @@ export default function RegisterPageForm() {
           />
 
           <Button
-            className={"absolute top-[5px] left-1 bg-input!"}
+            className="absolute top-1/2 right-1.5 size-8 -translate-y-1/2! rounded-lg border border-foreground/10 bg-foreground/6 text-muted-foreground backdrop-blur-md hover:bg-foreground/10 hover:text-foreground"
             onClick={handleShowPassword}
             type="button"
           >
-            {showPassword ? <EyeOff size={17} /> : <Eye size={17} />}
+            {showPassword ? <EyeOff size={16} /> : <Eye size={16} />}
           </Button>
         </div>
 
@@ -128,8 +149,8 @@ export default function RegisterPageForm() {
             <div className="flex items-center justify-between gap-x-2">
               {Array.from({ length: 4 }).map((_, index) => (
                 <div
-                  className={`w-1/4 rounded-md p-2 transition-colors duration-100 ${
-                    index < passwordStrength ? "bg-primary" : "bg-background/20"
+                  className={`h-2 w-1/4 rounded-md transition-colors duration-100 ${
+                    index < passwordStrength ? "bg-primary" : "bg-foreground/10"
                   }`}
                   // biome-ignore lint/suspicious/noArrayIndexKey: Intentional
                   key={index}
@@ -146,7 +167,12 @@ export default function RegisterPageForm() {
         ) : null}
       </div>
 
-      <Button className={"mt-2 py-5"} disabled={isSubmitting} type="submit">
+      {/* Submit */}
+      <Button
+        className="mt-1 h-11 rounded-xl bg-primary font-semibold text-primary-foreground shadow-[0_0_35px_rgba(0,0,0,0.25)] transition-all hover:bg-primary/90 hover:shadow-[0_0_45px_rgba(0,0,0,0.35)]"
+        disabled={isSubmitting}
+        type="submit"
+      >
         {isSubmitting ? (
           <Loader2 className="animate-spin" />
         ) : (

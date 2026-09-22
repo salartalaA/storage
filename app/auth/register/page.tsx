@@ -12,20 +12,45 @@ export default async function RegisterPage() {
   }
 
   return (
-    <main className="mx-3 flex min-h-screen items-center justify-center overflow-hidden bg-background text-foreground sm:mx-0">
-      <div className="w-full max-w-md rounded-2xl border border-border/60 bg-card p-6 shadow-card backdrop-blur-md sm:p-9">
+    <main className="relative mx-3 flex min-h-screen items-center justify-center overflow-hidden bg-background text-foreground sm:mx-0">
+      {/* Ambient background */}
+      <div className="pointer-events-none absolute inset-0 overflow-hidden">
+        <div className="absolute -top-32 -left-32 size-96 rounded-full bg-primary/15 blur-[120px]" />
+
+        <div className="absolute -bottom-40 -left-32 size-105 rounded-full bg-primary/20 blur-[140px]" />
+
+        <div className="absolute top-1/3 -right-40 size-105 rounded-full bg-primary/10 blur-[130px]" />
+
+        <div className="absolute -right-24 -bottom-48 size-96 rounded-full bg-primary/20 blur-[130px]" />
+
+        {/* Glass shapes */}
+        <div className="absolute top-1/3 -left-16 h-56 w-40 rotate-12 rounded-4xl border border-primary/10 bg-primary/5 blur-[1px] backdrop-blur-sm" />
+
+        <div className="absolute top-1/4 -right-20 h-64 w-44 -rotate-12 rounded-4xl border border-primary/10 bg-primary/5 blur-[1px] backdrop-blur-sm" />
+      </div>
+
+      {/* Card */}
+      <div className="relative z-10 w-full max-w-md rounded-[1.75rem] border border-foreground/8 bg-foreground/4.5 p-6 shadow-[0_8_40px_rgba(0,0,0,0.35)] backdrop-blur-[18px] sm:p-9">
+        {/* Card glow */}
+        <div className="pointer-events-none absolute inset-0 -z-10 rounded-[1.75rem] bg-primary/[0.035] blur-2xl" />
+
+        {/* Brand */}
         <div className="flex flex-col items-center justify-center gap-3">
-          <span className="rounded-xl bg-linear-to-br from-primary to-accent p-2.5">
-            <Box className="stroke-2" />
+          <span className="rounded-2xl border border-primary/20 bg-primary/15 p-2.5 shadow-[0_0_25px_rgba(59,130,246,0.18)] backdrop-blur-md">
+            <Box className="stroke-2 text-primary" />
           </span>
+
           <h1 className="font-bold text-foreground">{"انبار باز"}</h1>
+
           <p className="-mt-2 font-semibold text-muted-foreground text-sm">
             {"فروشگاهتو راحت تر مدیریت کن!"}
           </p>
         </div>
 
-        <div className="mt-7 flex flex-col gap-1">
-          <h3 className="font-bold">{"ساخت حساب"}</h3>
+        {/* Title */}
+        <div className="mt-8 flex flex-col gap-1">
+          <h3 className="font-bold text-foreground">{"ساخت حساب"}</h3>
+
           <p className="text-muted-foreground text-sm">
             {"کمتر از یه دقیقه حساب بساز و شروع کن"}
           </p>
@@ -34,12 +59,14 @@ export default async function RegisterPage() {
         <RegisterPageForm />
 
         <div className="mt-6 flex items-center justify-center gap-x-1">
-          <p className="text-muted-foreground">{"حساب داری؟"} </p>
+          <p className="text-muted-foreground">{"حساب داری؟"}</p>
+
           <Link
-            className="flex items-center gap-x-1 font-semibold text-primary text-sm"
-            href={"/auth/login"}
+            className="flex items-center gap-x-1 font-semibold text-primary text-sm transition-colors hover:text-primary/80"
+            href="/auth/login"
           >
-            {"وارد شو"} <ArrowLeft size={16} />
+            {"وارد شو"}
+            <ArrowLeft size={16} />
           </Link>
         </div>
       </div>
