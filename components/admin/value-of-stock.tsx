@@ -26,7 +26,7 @@ export default function ValueOfStock() {
           <div>
             <p className="text-muted-foreground text-xs">{"ارزش کل موجودی"}</p>
 
-            <p className="mt-1 font-bold text-2xl tracking-tight">
+            <p className="mt-1 font-bold text-xl tracking-tight">
               {"۲۸۵ میلیون"}
             </p>
 

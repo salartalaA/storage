@@ -1,7 +1,7 @@
 "use client";
 
+import { FileChartColumnIncreasing } from "lucide-react";
 import { Pie, PieChart } from "recharts";
-
 import {
   type ChartConfig,
   ChartContainer,
@@ -46,7 +46,13 @@ export function ChartPieLegend() {
   return (
     <div>
       <div className="mb-1 flex items-center justify-between">
-        <h3 className="font-semibold">{"وضعیت موجودی"}</h3>
+        <div className="flex items-center gap-x-2">
+          <span className="flex size-9 items-center justify-center rounded-xl bg-success/10 text-success">
+            <FileChartColumnIncreasing size={18} />
+          </span>
+
+          <h3 className="font-semibold">{"وضعیت موجودی"}</h3>
+        </div>
 
         <span className="text-muted-foreground text-xs">{"۲۴۵ محصول"}</span>
       </div>
