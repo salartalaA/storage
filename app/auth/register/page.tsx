@@ -30,7 +30,7 @@ export default async function RegisterPage() {
       </div>
 
       {/* Card */}
-      <div className="relative z-10 w-full max-w-md rounded-[1.75rem] border border-foreground/8 bg-foreground/4.5 p-6 shadow-[0_8_40px_rgba(0,0,0,0.35)] backdrop-blur-[18px] sm:p-9">
+      <div className="relative z-10 w-full max-w-md rounded-[1.75rem] border border-foreground/8 bg-card/4.5 p-6 shadow-[0_8px_40px_rgba(0,0,0,0.35)] backdrop-blur-[18px] sm:p-9">
         {/* Card glow */}
         <div className="pointer-events-none absolute inset-0 -z-10 rounded-[1.75rem] bg-primary/[0.035] blur-2xl" />
 
