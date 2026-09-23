@@ -6,6 +6,8 @@ import {
   TrendingUp,
   TriangleAlert,
 } from "lucide-react";
+import { redirect } from "next/navigation";
+import { getCurrentStore } from "@/actions/auth";
 import AdminHeader from "@/components/admin/admin-header";
 import { ChartPieLegend } from "@/components/admin/chart-pie-legend";
 import { StatCard } from "@/components/admin/stat-card";
@@ -58,7 +60,13 @@ const stats = [
   },
 ];
 
-export default function Dashboard() {
+export default async function Dashboard() {
+  const currentStore = await getCurrentStore();
+
+  if (!currentStore) {
+    return redirect("/auth/login");
+  }
+
   return (
     <main className="relative flex min-h-screen flex-col items-center overflow-hidden px-3">
       {/* Ambient background */}
