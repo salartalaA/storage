@@ -10,6 +10,7 @@ import { redirect } from "next/navigation";
 import { getCurrentStore } from "@/actions/auth";
 import AdminHeader from "@/components/admin/admin-header";
 import { ChartPieLegend } from "@/components/admin/chart-pie-legend";
+import ExpiringProducts from "@/components/admin/expiring-products";
 import { StatCard } from "@/components/admin/stat-card";
 import ValueOfStock from "@/components/admin/value-of-stock";
 
@@ -116,6 +117,8 @@ export default async function Dashboard() {
         </div>
 
         <ValueOfStock />
+
+        <ExpiringProducts />
       </div>
     </main>
   );
