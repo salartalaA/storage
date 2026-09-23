@@ -9,6 +9,7 @@ import {
 import AdminHeader from "@/components/admin/admin-header";
 import { ChartPieLegend } from "@/components/admin/chart-pie-legend";
 import { StatCard } from "@/components/admin/stat-card";
+import ValueOfStock from "@/components/admin/value-of-stock";
 
 const stats = [
   {
@@ -105,6 +106,8 @@ export default function Dashboard() {
 
           <ChartPieLegend />
         </div>
+
+        <ValueOfStock />
       </div>
     </main>
   );
