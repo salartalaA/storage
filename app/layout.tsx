@@ -38,11 +38,14 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
         <Toaster
           position="top-right"
           toastOptions={{
-            className: "border-border! border-2!",
+            className:
+              "border-border/60! bg-card/80! text-foreground! shadow-[0_8px_30px_rgba(0,0,0,0.35)]! backdrop-blur-xl! font-vazir!",
             classNames: {
-              closeButton: "bg-card! text-foreground! border-border!",
-              error: "bg-card! text-destructive!",
-              success: "bg-card! text-primary!",
+              closeButton:
+                "border-border/60! bg-background/50! text-muted-foreground! hover:bg-background/80! hover:text-foreground!",
+              error:
+                "border-destructive/20! bg-destructive/10! text-destructive!",
+              success: "border-success/20! bg-success/10! text-success!",
             },
             closeButton: true,
           }}

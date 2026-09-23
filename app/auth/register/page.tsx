@@ -13,22 +13,6 @@ export default async function RegisterPage() {
 
   return (
     <main className="relative flex min-h-screen items-center justify-center overflow-hidden bg-background px-3 text-foreground sm:px-0">
-      {/* Ambient background */}
-      <div className="pointer-events-none absolute inset-0 overflow-hidden">
-        <div className="absolute -top-32 -left-32 size-96 rounded-full bg-primary/15 blur-[120px]" />
-
-        <div className="absolute -bottom-40 -left-32 size-105 rounded-full bg-primary/20 blur-[140px]" />
-
-        <div className="absolute top-1/3 -right-40 size-105 rounded-full bg-primary/10 blur-[130px]" />
-
-        <div className="absolute -right-24 -bottom-48 size-96 rounded-full bg-primary/20 blur-[130px]" />
-
-        {/* Glass shapes */}
-        <div className="absolute top-1/3 -left-16 h-56 w-40 rotate-12 rounded-4xl border border-primary/10 bg-primary/5 blur-[1px] backdrop-blur-sm" />
-
-        <div className="absolute top-1/4 -right-20 h-64 w-44 -rotate-12 rounded-4xl border border-primary/10 bg-primary/5 blur-[1px] backdrop-blur-sm" />
-      </div>
-
       {/* Card */}
       <div className="relative z-10 w-full max-w-md rounded-[1.75rem] border border-foreground/8 bg-card/4.5 p-6 shadow-[0_8px_40px_rgba(0,0,0,0.35)] backdrop-blur-[18px] sm:p-9">
         {/* Card glow */}
