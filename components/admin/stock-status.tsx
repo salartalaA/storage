@@ -42,9 +42,14 @@ const chartConfig = {
   },
 } satisfies ChartConfig;
 
-export function ChartPieLegend() {
+export default function StockStatus() {
   return (
-    <div>
+    <div className="group relative overflow-hidden rounded-3xl border border-foreground/8 bg-card/4.5 p-4 shadow-[0_8px_40px_rgba(0,0,0,0.35)] backdrop-blur-[18px] transition-all duration-300 hover:-translate-y-0.5 hover:border-foreground/12 hover:bg-card/6.5 hover:shadow-[0_12px_45px_rgba(0,0,0,0.42)]">
+      {/* Glass reflection */}
+      <div className="pointer-events-none absolute inset-x-0 top-0 h-px bg-linear-to-r from-transparent via-foreground/12 to-transparent" />
+      {/* Subtle colored glow */}
+      <div className="pointer-events-none absolute -top-12 -right-12 size-28 rounded-full bg-primary/4.5 blur-3xl transition-all duration-300 group-hover:bg-primary/8" />
+
       <div className="mb-1 flex items-center justify-between">
         <div className="flex items-center gap-x-2">
           <span className="flex size-9 items-center justify-center rounded-xl bg-success/10 text-success">
