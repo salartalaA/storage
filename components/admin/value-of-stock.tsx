@@ -18,7 +18,7 @@ export default function ValueOfStock() {
             <h3 className="font-semibold text-base">{"ارزش موجودی"}</h3>
           </div>
 
-          <span className="text-muted-foreground text-xs">{"۶ ماه اخیر"}</span>
+          <span className="text-muted-foreground text-xs">{"۴ ماه اخیر"}</span>
         </div>
 
         {/* Main Value */}

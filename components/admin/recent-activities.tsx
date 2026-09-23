@@ -90,7 +90,7 @@ export default function RecentActivities() {
               <History className="text-primary" size={18} />
             </div>
 
-            <h3 className="font-semibold text-foreground text-sm">
+            <h3 className="font-semibold text-foreground">
               {"فعالیت‌های اخیر"}
             </h3>
           </div>

@@ -60,7 +60,7 @@ export default function ExpiringProducts() {
               <TriangleAlert className="text-warning" size={18} />
             </div>
 
-            <h3 className="font-semibold text-foreground text-sm">
+            <h3 className="font-semibold text-foreground">
               {"محصولات نزدیک به انقضا"}
             </h3>
           </div>

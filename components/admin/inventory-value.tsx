@@ -35,7 +35,7 @@ export default function InventoryValue() {
 
       <div className="relative">
         <div className="mb-5 flex items-center justify-between">
-          <h3 className="font-semibold text-foreground text-sm">
+          <h3 className="font-semibold text-foreground">
             {"ارزش موجودی به تفکیک دسته"}
           </h3>
 
