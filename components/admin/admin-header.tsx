@@ -10,10 +10,10 @@ export default function AdminHeader() {
   };
 
   return (
-    <header className="overflow-hidden rounded-3xl border border-foreground/8 bg-card/4.5 p-4 px-8 shadow-[0_8px_40px_rgba(0,0,0,0.35)] backdrop-blur-[18px]">
+    <header className="overflow-hidden rounded-3xl border border-foreground/8 bg-card/4.5 p-5 shadow-[0_8px_40px_rgba(0,0,0,0.35)] backdrop-blur-[18px]">
       <div className="relative flex items-center justify-between">
         <div className="flex items-center gap-x-4">
-          <span className="-ms-4 rounded-xl border border-foreground/6 bg-card/70 p-3 shadow-[0_4px_18px_rgba(0,0,0,0.22)] backdrop-blur-md">
+          <span className="rounded-xl border border-foreground/6 bg-card/70 p-3 shadow-[0_4px_18px_rgba(0,0,0,0.22)] backdrop-blur-md">
             <Store className="text-primary" size={20} />
           </span>
 
@@ -30,7 +30,7 @@ export default function AdminHeader() {
         </div>
 
         <Button
-          className="-me-4 size-10 rounded-xl border border-foreground/5 bg-card/60 text-muted-foreground shadow-none backdrop-blur-md transition-all duration-200 hover:bg-card/90 hover:text-foreground"
+          className="size-10 rounded-xl border border-foreground/5 bg-card/60 text-muted-foreground shadow-none backdrop-blur-md transition-all duration-200 hover:bg-card/90 hover:text-foreground"
           onClick={handleLogOut}
           variant="ghost"
         >
