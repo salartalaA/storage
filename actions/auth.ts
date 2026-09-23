@@ -3,6 +3,7 @@
 import crypto from "node:crypto";
 import bcrypt from "bcryptjs";
 import { cookies } from "next/headers";
+import { redirect } from "next/navigation";
 import prisma from "@/lib/prisma";
 import type { LoginData, RegisterData } from "@/schema/auth";
 
@@ -129,4 +130,22 @@ export async function getCurrentStore() {
   }
 
   return session.store;
+}
+
+export async function logOutStore() {
+  const cookieStore = await cookies();
+
+  const sessionId = cookieStore.get("session")?.value;
+
+  if (sessionId) {
+    await prisma.session.delete({
+      where: {
+        id: sessionId,
+      },
+    });
+
+    cookieStore.delete("session");
+  }
+
+  redirect("/auth/login");
 }

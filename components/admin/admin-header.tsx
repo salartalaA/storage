@@ -1,7 +1,14 @@
+"use client";
+
 import { Calendar, LogOut, Store } from "lucide-react";
+import { logOutStore } from "@/actions/auth";
 import { Button } from "@/components/ui/button";
 
 export default function AdminHeader() {
+  const handleLogOut = async () => {
+    await logOutStore();
+  };
+
   return (
     <header className="overflow-hidden rounded-3xl border border-foreground/8 bg-card/4.5 p-4 px-8 shadow-[0_8px_40px_rgba(0,0,0,0.35)] backdrop-blur-[18px]">
       <div className="relative flex items-center justify-between">
@@ -24,6 +31,7 @@ export default function AdminHeader() {
 
         <Button
           className="-me-4 size-10 rounded-xl border border-foreground/5 bg-card/60 text-muted-foreground shadow-none backdrop-blur-md transition-all duration-200 hover:bg-card/90 hover:text-foreground"
+          onClick={handleLogOut}
           variant="ghost"
         >
           <LogOut size={18} />
