@@ -78,7 +78,7 @@ export default function ExpiringProducts() {
               <div key={product.name}>
                 <div className="flex items-center gap-3 py-2">
                   <div
-                    className={`flex size-9 shrink-0 items-center justify-center rounded-xl ${colors.icon}`}
+                    className={`flex size-9 shrink-0 items-center justify-center rounded-xl ring-1 ring-${colors.icon} ${colors.icon}`}
                   >
                     <CalendarClock size={18} />
                   </div>

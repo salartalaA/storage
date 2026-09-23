@@ -1,6 +1,7 @@
 import {
   CircleArrowDown,
   CircleArrowUp,
+  History,
   type LucideIcon,
   SlidersHorizontal,
   Trash2,
@@ -79,16 +80,22 @@ export default function RecentActivities() {
       <div className="relative">
         {/* Header */}
         <div className="mb-4 flex items-center justify-between">
-          <h3 className="font-semibold text-foreground text-sm">
-            {"فعالیت‌های اخیر"}
-          </h3>
+          <div className="flex items-center gap-2">
+            <div className="flex size-9 items-center justify-center rounded-xl bg-primary/10">
+              <History className="text-primary" size={18} />
+            </div>
+
+            <h3 className="font-semibold text-foreground text-sm">
+              {"فعالیت‌های اخیر"}
+            </h3>
+          </div>
 
           <span className="text-[11px] text-muted-foreground">{"امروز"}</span>
         </div>
 
         {/* Timeline */}
         <div className="relative">
-          <div className="absolute top-2 right-[18px] bottom-2 w-px bg-border/40" />
+          <div className="absolute top-2 right-4.5 bottom-2 w-px bg-border/40" />
 
           <div className="space-y-4">
             {activities.map((activity) => {
@@ -101,7 +108,7 @@ export default function RecentActivities() {
                   key={`${activity.name}-${activity.type}`}
                 >
                   <div
-                    className={`relative z-10 flex size-9 shrink-0 items-center justify-center rounded-full ring-4 ring-background ${colors.icon}`}
+                    className={`relative z-10 flex size-9 shrink-0 items-center justify-center rounded-full ring-1 ring-${colors.icon} ${colors.icon}`}
                   >
                     <Icon className="size-4" />
                   </div>

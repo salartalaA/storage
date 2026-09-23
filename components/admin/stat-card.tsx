@@ -33,7 +33,7 @@ export function StatCard({
         {/* Top row */}
         <div className="flex items-center justify-between">
           <span
-            className={`rounded-xl border border-foreground/5 p-2.5 shadow-[0_4px_16px_rgba(0,0,0,0.18)] backdrop-blur-md ${iconClass}`}
+            className={`rounded-xl border border-foreground/5 p-2.5 shadow-[0_4px_16px_rgba(0,0,0,0.18)] ring-1 backdrop-blur-md ring-${iconClass} ${iconClass}`}
           >
             <Icon size={19} strokeWidth={2} />
           </span>
