@@ -3,7 +3,7 @@ import { Button } from "@/components/ui/button";
 
 export default function AdminHeader() {
   return (
-    <header className="mt-6 overflow-hidden rounded-3xl border border-foreground/8 bg-card/4.5 p-4 px-8 shadow-[0_8px_40px_rgba(0,0,0,0.35)] backdrop-blur-[18px]">
+    <header className="overflow-hidden rounded-3xl border border-foreground/8 bg-card/4.5 p-4 px-8 shadow-[0_8px_40px_rgba(0,0,0,0.35)] backdrop-blur-[18px]">
       <div className="relative flex items-center justify-between">
         <div className="flex items-center gap-x-4">
           <span className="-ms-4 rounded-xl border border-foreground/6 bg-card/70 p-3 shadow-[0_4px_18px_rgba(0,0,0,0.22)] backdrop-blur-md">

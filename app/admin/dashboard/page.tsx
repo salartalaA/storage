@@ -82,7 +82,7 @@ export default async function Dashboard() {
         <div className="absolute top-[18%] -right-24 h-72 w-48 -rotate-12 rounded-4xl border border-primary/8 bg-primary/2.5 backdrop-blur-sm" />
       </div>
 
-      <div className="relative z-10 flex w-full max-w-2xl flex-col gap-y-4">
+      <div className="relative z-10 my-6 flex w-full max-w-2xl flex-col gap-y-4">
         <AdminHeader />
 
         {/* Statistics */}
