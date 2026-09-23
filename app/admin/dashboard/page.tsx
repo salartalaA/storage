@@ -100,9 +100,9 @@ export default async function Dashboard() {
 
         <StockStatus />
 
-        <InventoryValue />
-
         <ValueOfStock />
+
+        <InventoryValue />
 
         <ExpiringProducts />
 
