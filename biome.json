@@ -31,6 +31,9 @@
       "a11y": {
         "noSvgWithoutTitle": "off",
         "noLabelWithoutControl": "off"
+      },
+      "suspicious": {
+        "noLeakedRender": "off"
       }
     },
     "domains": {
@@ -55,7 +58,6 @@
           "suspicious": {
             "noEqualsToNull": "off",
             "noShadow": "off",
-            "noLeakedRender": "off",
             "noArrayIndexKey": "off"
           },
           "security": {

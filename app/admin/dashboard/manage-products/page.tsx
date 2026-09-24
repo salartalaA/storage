@@ -1,10 +1,8 @@
 import AdminHeader from "@/components/admin/admin-header";
 import ProductFilters from "@/components/admin/manage-products/product-filter";
 import SearchBox from "@/components/admin/manage-products/search-box";
-import {
-  type StockItem,
-  StockItemCard,
-} from "@/components/admin/manage-products/stock-item-card";
+import type { StockItem } from "@/components/admin/manage-products/stock-item-card";
+import { StockItemDialog } from "@/components/admin/manage-products/stock-item-dialog";
 
 export default function ManageProductsPage() {
   const stockItems: StockItem[] = [
@@ -65,7 +63,7 @@ export default function ManageProductsPage() {
 
         <div className="flex flex-col gap-3">
           {stockItems.map((item) => (
-            <StockItemCard item={item} key={item.id} />
+            <StockItemDialog item={item} key={item.id} />
           ))}
         </div>
       </div>
