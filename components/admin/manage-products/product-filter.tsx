@@ -37,11 +37,11 @@ const statuses = [
     value: "همه",
   },
   {
-    label: "INSTOCK",
+    label: "IN_STOCK",
     value: "موجود",
   },
   {
-    label: "LOWSTOCK",
+    label: "LOW_STOCK",
     value: "کم موجود",
   },
   {

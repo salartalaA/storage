@@ -16,7 +16,7 @@ export default function ManageProductsPage() {
       lastUpdated: "۱۴۰۵/۰۶/۲۴",
       location: "انبار اصلی",
       quantity: 32,
-      status: "INSTOCK",
+      status: "IN_STOCK",
       title: "برنج طارم گلستان",
     },
     {
@@ -38,7 +38,7 @@ export default function ManageProductsPage() {
       lastUpdated: "۱۴۰۵/۰۶/۲۳",
       location: "انبار اصلی",
       quantity: 32,
-      status: "INSTOCK",
+      status: "IN_STOCK",
       title: "شیر کم‌چرب پگاه",
     },
     {
@@ -49,7 +49,7 @@ export default function ManageProductsPage() {
       lastUpdated: "۱۴۰۵/۰۶/۲۳",
       location: "سردخانه",
       quantity: 32,
-      status: "INSTOCK",
+      status: "IN_STOCK",
       title: "ماست کاله",
     },
   ];

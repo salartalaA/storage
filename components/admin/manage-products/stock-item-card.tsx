@@ -10,13 +10,13 @@ export interface StockItem {
   lastUpdated: string;
   location: string;
   quantity: number | string;
-  status: "INSTOCK" | "LOW_STOCK" | "OUTOFSTOCK";
+  status: "IN_STOCK" | "LOW_STOCK" | "OUT_OF_STOCK";
   title: string;
   unit?: string;
 }
 
 const statusStyles = {
-  INSTOCK: {
+  IN_STOCK: {
     badge: "border-success/15 bg-success/8 text-success",
     label: "موجود",
     quantity: "text-success",
@@ -28,7 +28,7 @@ const statusStyles = {
     quantity: "text-warning",
     text: "text-warning",
   },
-  OUTOFSTOCK: {
+  OUT_OF_STOCK: {
     badge: "border-foreground/8 bg-foreground/5 text-muted-foreground",
     label: "ناموجود",
     quantity: "text-muted-foreground",
@@ -37,7 +37,7 @@ const statusStyles = {
 };
 
 export function StockItemCard({ item }: { item: StockItem }) {
-  const status = statusStyles[item.status] ?? statusStyles.OUTOFSTOCK;
+  const status = statusStyles[item.status] ?? statusStyles.OUT_OF_STOCK;
 
   return (
     <div className="group relative overflow-hidden rounded-3xl border border-foreground/8 bg-card/4.5 p-4 shadow-[0_8px_40px_rgba(0,0,0,0.3)] backdrop-blur-[18px] transition-all duration-300 hover:border-foreground/12 hover:bg-card/6 hover:shadow-[0_10px_42px_rgba(0,0,0,0.35)]">
