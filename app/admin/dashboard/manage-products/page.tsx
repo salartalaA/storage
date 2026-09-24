@@ -1,8 +1,59 @@
 import AdminHeader from "@/components/admin/admin-header";
 import ProductFilters from "@/components/admin/manage-products/product-filter";
 import SearchBox from "@/components/admin/manage-products/search-box";
+import {
+  type StockItem,
+  StockItemCard,
+} from "@/components/admin/manage-products/stock-item-card";
 
 export default function ManageProductsPage() {
+  const stockItems: StockItem[] = [
+    {
+      barcode: "6266789012346",
+      category: "مواد غذایی",
+      id: "item-101",
+      image: "/golestan-rice.jpg",
+      lastUpdated: "۱۴۰۵/۰۶/۲۴",
+      location: "انبار اصلی",
+      quantity: 32,
+      status: "INSTOCK",
+      title: "برنج طارم گلستان",
+    },
+    {
+      barcode: "6261112223334",
+      category: "لبنیات",
+      id: "item-102",
+      image: "/lighvan-cheese.png",
+      lastUpdated: "۱۴۰۵/۰۶/۲۴",
+      location: "سردخانه",
+      quantity: 20,
+      status: "LOW_STOCK",
+      title: "پنیر سفید لیقوان",
+    },
+    {
+      barcode: "6261234567891",
+      category: "لبنیات",
+      id: "item-103",
+      image: "/pegah-milk.png",
+      lastUpdated: "۱۴۰۵/۰۶/۲۳",
+      location: "انبار اصلی",
+      quantity: 32,
+      status: "INSTOCK",
+      title: "شیر کم‌چرب پگاه",
+    },
+    {
+      barcode: "6262345678902",
+      category: "لبنیات",
+      id: "item-104",
+      image: "/yogurt-seven.jpg",
+      lastUpdated: "۱۴۰۵/۰۶/۲۳",
+      location: "سردخانه",
+      quantity: 32,
+      status: "INSTOCK",
+      title: "ماست کاله",
+    },
+  ];
+
   return (
     <main className="flex min-h-screen flex-col items-center overflow-hidden px-3">
       <div className="my-6 flex w-full max-w-2xl flex-col gap-y-4">
@@ -11,6 +62,12 @@ export default function ManageProductsPage() {
         <SearchBox />
 
         <ProductFilters />
+
+        <div className="flex flex-col gap-3">
+          {stockItems.map((item) => (
+            <StockItemCard item={item} key={item.id} />
+          ))}
+        </div>
       </div>
     </main>
   );
