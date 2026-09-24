@@ -1,6 +1,7 @@
 "use client";
 
 import { ShoppingCart } from "lucide-react";
+import { motion } from "motion/react";
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
 
@@ -54,69 +55,164 @@ type Category = (typeof categories)[number]["label"];
 
 type Status = (typeof statuses)[number]["label"];
 
+const itemVariants = {
+  hidden: {
+    opacity: 0,
+    x: 10,
+  },
+  visible: {
+    opacity: 1,
+    x: 0,
+  },
+};
+
 export default function ProductFilters() {
   const [activeCategory, setActiveCategory] = useState<Category>("ALL");
   const [activeStatus, setActiveStatus] = useState<Status>("ALL");
 
   return (
-    <div className="flex flex-col gap-2.5">
+    <motion.div
+      className="flex flex-col gap-2.5"
+      initial="hidden"
+      variants={{
+        hidden: {},
+        visible: {
+          transition: {
+            staggerChildren: 0.05,
+          },
+        },
+      }}
+      viewport={{
+        amount: 0.2,
+        once: true,
+      }}
+      whileInView="visible"
+    >
       {/* Categories */}
-      <div className="no-scrollbar flex items-center gap-2 overflow-x-auto pb-0.5">
+      <motion.div
+        className="no-scrollbar flex items-center gap-2 overflow-x-auto pb-0.5"
+        variants={{
+          hidden: {},
+          visible: {
+            transition: {
+              staggerChildren: 0.05,
+            },
+          },
+        }}
+      >
         {categories.map((category) => {
           const active = activeCategory === category.label;
 
           return (
-            <Button
-              className={`relative flex shrink-0 items-center gap-1.5 rounded-2xl px-3.5 py-1.5 font-medium text-xs transition-all duration-200 ${
-                active
-                  ? "text-primary-foreground"
-                  : "border border-foreground/8 bg-card/4.5 text-muted-foreground backdrop-blur-[18px] hover:border-foreground/15 hover:bg-card/8 hover:text-foreground"
-              }
-              `}
+            <motion.div
               key={category.label}
-              // biome-ignore lint/performance/noJsxPropsBind: No problem for performance
-              onClick={() => setActiveCategory(category.label)}
+              transition={{
+                duration: 0.3,
+                ease: "easeOut",
+              }}
+              variants={itemVariants}
             >
-              {active && (
-                <span className="absolute inset-0 rounded-2xl bg-primary/90" />
-              )}
+              <Button
+                className={`relative flex shrink-0 items-center gap-1.5 rounded-2xl px-3.5 py-1.5 font-medium text-xs transition-colors duration-200 ${
+                  active
+                    ? "text-primary-foreground"
+                    : "border border-foreground/8 bg-card/4.5 text-muted-foreground backdrop-blur-[18px] hover:border-foreground/15 hover:bg-card/8 hover:text-foreground"
+                }`}
+                // biome-ignore lint/performance/noJsxPropsBind: No problem for performance
+                onClick={() => setActiveCategory(category.label)}
+              >
+                {active && (
+                  <motion.span
+                    className="absolute inset-0 rounded-2xl bg-primary/90"
+                    layoutId="active-category"
+                    transition={{
+                      damping: 35,
+                      stiffness: 500,
+                      type: "spring",
+                    }}
+                  />
+                )}
 
-              <span className="relative z-10">{category.value}</span>
-            </Button>
+                <span className="relative z-10">{category.value}</span>
+              </Button>
+            </motion.div>
           );
         })}
-      </div>
+      </motion.div>
 
       {/* Status */}
-      <div className="no-scrollbar flex items-center justify-between gap-2 overflow-x-auto pb-0.5">
-        <div className="flex items-center gap-2">
+      <div className="flex items-center justify-between gap-2">
+        <motion.div
+          className="no-scrollbar flex items-center gap-2 overflow-x-auto pb-0.5"
+          variants={{
+            hidden: {},
+            visible: {
+              transition: {
+                delayChildren: 0.1,
+                staggerChildren: 0.05,
+              },
+            },
+          }}
+        >
           {statuses.map((status) => {
             const active = activeStatus === status.label;
 
             return (
-              <Button
-                className={`relative flex shrink-0 items-center gap-1.5 rounded-2xl px-3.5 py-1.5 font-medium text-xs transition-all duration-200 ${
-                  active
-                    ? "text-primary-foreground"
-                    : "border border-foreground/8 bg-card/4.5 text-muted-foreground backdrop-blur-[18px] hover:border-foreground/15 hover:bg-card/8 hover:text-foreground"
-                }
-              `}
+              <motion.div
                 key={status.label}
-                // biome-ignore lint/performance/noJsxPropsBind: No problem for performance
-                onClick={() => setActiveStatus(status.label)}
+                transition={{
+                  duration: 0.3,
+                  ease: "easeOut",
+                }}
+                variants={itemVariants}
               >
-                {active && (
-                  <span className="absolute inset-0 rounded-2xl bg-primary/90" />
-                )}
+                <Button
+                  className={`relative flex shrink-0 items-center gap-1.5 rounded-2xl px-3.5 py-1.5 font-medium text-xs transition-colors duration-200 ${
+                    active
+                      ? "text-primary-foreground"
+                      : "border border-foreground/8 bg-card/4.5 text-muted-foreground backdrop-blur-[18px] hover:border-foreground/15 hover:bg-card/8 hover:text-foreground"
+                  }`}
+                  // biome-ignore lint/performance/noJsxPropsBind: No problem for performance
+                  onClick={() => setActiveStatus(status.label)}
+                >
+                  {active && (
+                    <motion.span
+                      className="absolute inset-0 rounded-2xl bg-primary/90"
+                      layoutId="active-status"
+                      transition={{
+                        damping: 35,
+                        stiffness: 500,
+                        type: "spring",
+                      }}
+                    />
+                  )}
 
-                <span className="relative z-10">{status.value}</span>
-              </Button>
+                  <span className="relative z-10">{status.value}</span>
+                </Button>
+              </motion.div>
             );
           })}
-        </div>
+        </motion.div>
 
         {/* Products count badge */}
-        <div className="flex w-fit items-center gap-1 rounded-full bg-primary/10 p-2 px-2.5 py-1 text-primary">
+        <motion.div
+          className="flex w-fit shrink-0 items-center gap-1 rounded-full bg-primary/10 p-2 px-2.5 py-1 text-primary"
+          transition={{
+            delay: 0.25,
+            duration: 0.3,
+            ease: "easeOut",
+          }}
+          variants={{
+            hidden: {
+              opacity: 0,
+              scale: 0.9,
+            },
+            visible: {
+              opacity: 1,
+              scale: 1,
+            },
+          }}
+        >
           <div className="flex items-center gap-1">
             <ShoppingCart size={14} />
 
@@ -124,8 +220,8 @@ export default function ProductFilters() {
           </div>
 
           <span className="font-bold text-sm">{"۱۵"}</span>
-        </div>
+        </motion.div>
       </div>
-    </div>
+    </motion.div>
   );
 }
