@@ -9,6 +9,7 @@ import {
 import { redirect } from "next/navigation";
 import { getCurrentStore } from "@/actions/auth";
 import AdminHeader from "@/components/admin/admin-header";
+import { AnimatedStatCard } from "@/components/admin/animated-stat-card";
 import ExpiringProducts from "@/components/admin/expiring-products";
 import InventoryValue from "@/components/admin/inventory-value";
 import RecentActivities from "@/components/admin/recent-activities";
@@ -77,23 +78,24 @@ export default async function Dashboard() {
 
         {/* Statistics */}
         <div className="grid grid-cols-2 gap-3">
-          {stats.map((stat) => {
+          {stats.map((stat, index) => {
             const Icon = stat.icon;
             const TrendIcon = stat.trendIcon;
 
             return (
-              <StatCard
-                description={stat.description}
-                icon={Icon}
-                iconClass={stat.iconClass}
-                key={stat.title}
-                title={stat.title}
-                trend={stat.trend}
-                trendClass={stat.trendClass}
-                trendIcon={TrendIcon}
-                value={stat.value}
-                valueClass={stat.valueClass}
-              />
+              <AnimatedStatCard index={index} key={stat.title}>
+                <StatCard
+                  description={stat.description}
+                  icon={Icon}
+                  iconClass={stat.iconClass}
+                  title={stat.title}
+                  trend={stat.trend}
+                  trendClass={stat.trendClass}
+                  trendIcon={TrendIcon}
+                  value={stat.value}
+                  valueClass={stat.valueClass}
+                />
+              </AnimatedStatCard>
             );
           })}
         </div>

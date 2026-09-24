@@ -1,3 +1,5 @@
+"use client";
+
 import {
   CircleArrowDown,
   CircleArrowUp,
@@ -6,6 +8,7 @@ import {
   SlidersHorizontal,
   Trash2,
 } from "lucide-react";
+import { motion } from "motion/react";
 
 interface Activity {
   amount: string;
@@ -61,62 +64,119 @@ const activities: Activity[] = [
 
 const colorClasses = {
   destructive: {
+    badge: "bg-destructive/10 text-destructive border-destructive/20",
     icon: "bg-destructive/10 text-destructive",
     text: "text-destructive",
   },
   normal: {
+    badge: "bg-primary/10 text-primary border-primary/20",
     icon: "bg-primary/10 text-primary",
     text: "text-primary",
   },
   success: {
-    icon: "bg-success/10 text-success",
-    text: "text-success",
+    badge: "bg-emerald-500/10 text-emerald-500 border-emerald-500/20",
+    icon: "bg-emerald-500/10 text-emerald-500",
+    text: "text-emerald-500",
   },
 } as const;
 
 export default function RecentActivities() {
   return (
-    <div className="group relative overflow-hidden rounded-3xl border border-foreground/8 bg-card/4.5 p-5 shadow-[0_8px_40px_rgba(0,0,0,0.35)] backdrop-blur-[18px] transition-all duration-300 hover:-translate-y-0.5 hover:border-foreground/12 hover:bg-card/6.5 hover:shadow-[0_12px_45px_rgba(0,0,0,0.42)]">
+    <motion.div
+      className="group relative overflow-hidden rounded-3xl border border-foreground/8 bg-card/4.5 p-5 shadow-[0_8px_40px_rgba(0,0,0,0.35)] backdrop-blur-[18px] transition-colors duration-300 hover:border-foreground/12 hover:bg-card/6.5 hover:shadow-[0_12px_45px_rgba(0,0,0,0.42)]"
+      initial={{ opacity: 0, scale: 0.98, y: 20 }}
+      transition={{ duration: 0.5, ease: [0.16, 1, 0.3, 1] }}
+      viewport={{ once: true }}
+      whileHover={{ y: -4 }}
+      whileInView={{ opacity: 1, scale: 1, y: 0 }}
+    >
       {/* Glass reflection */}
-      <div className="pointer-events-none absolute inset-x-0 top-0 h-px bg-linear-to-r from-transparent via-foreground/12 to-transparent" />
+      <motion.div
+        className="pointer-events-none absolute inset-x-0 top-0 h-px bg-linear-to-r from-transparent via-foreground/12 to-transparent"
+        initial={{ opacity: 0 }}
+        transition={{
+          duration: 4,
+          ease: "easeInOut",
+          repeat: Number.POSITIVE_INFINITY,
+        }}
+        viewport={{ once: true }}
+        whileInView={{ opacity: [0.3, 0.8, 0.3] }}
+      />
+
       {/* Subtle colored glow */}
       <div className="pointer-events-none absolute -top-12 -right-12 size-28 rounded-full bg-primary/4.5 blur-3xl transition-all duration-300 group-hover:bg-primary/8" />
 
       <div className="relative">
         {/* Header */}
-        <div className="mb-4 flex items-center justify-between">
+        <motion.div
+          className="mb-4 flex items-center justify-between"
+          initial={{ opacity: 0, y: 10 }}
+          transition={{ delay: 0.1, duration: 0.4 }}
+          viewport={{ once: true }}
+          whileInView={{ opacity: 1, y: 0 }}
+        >
           <div className="flex items-center gap-2">
-            <div className="flex size-9 items-center justify-center rounded-xl bg-primary/10">
-              <History className="text-primary" size={18} />
-            </div>
+            <motion.div
+              className="flex size-9 items-center justify-center rounded-xl bg-primary/10 text-primary"
+              transition={{ damping: 10, stiffness: 400, type: "spring" }}
+              whileHover={{ rotate: -15, scale: 1.1 }}
+            >
+              <History size={18} />
+            </motion.div>
 
             <h3 className="font-semibold text-foreground">
-              {"فعالیت‌های اخیر"}
+              {"فعالیت‌های احیر"}
             </h3>
           </div>
 
           <span className="text-[11px] text-muted-foreground">{"امروز"}</span>
-        </div>
+        </motion.div>
 
         {/* Timeline */}
         <div className="relative">
-          <div className="absolute top-2 right-4.5 bottom-2 w-px bg-border/40" />
+          {/* Timeline Line Animation */}
+          <motion.div
+            className="absolute top-2 right-4.5 bottom-2 w-px origin-top bg-border/40"
+            initial={{ scaleY: 0 }}
+            transition={{ delay: 0.2, duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
+            viewport={{ once: true }}
+            whileInView={{ scaleY: 1 }}
+          />
 
           <div className="space-y-4">
-            {activities.map((activity) => {
+            {activities.map((activity, index) => {
               const Icon = activity.icon;
               const colors = colorClasses[activity.color];
 
               return (
-                <div
+                <motion.div
                   className="relative flex items-start gap-3"
+                  initial={{ opacity: 0, x: -15 }}
                   key={`${activity.name}-${activity.type}`}
+                  transition={{
+                    delay: 0.2 + index * 0.08,
+                    duration: 0.45,
+                    ease: [0.16, 1, 0.3, 1],
+                  }}
+                  viewport={{ once: true }}
+                  whileInView={{ opacity: 1, x: 0 }}
                 >
-                  <div
-                    className={`relative z-10 flex size-9 shrink-0 items-center justify-center rounded-full ring-1 ring-${colors.icon} ${colors.icon}`}
+                  <motion.div
+                    className={`relative z-10 flex size-9 shrink-0 items-center justify-center rounded-full border border-foreground/5 ${colors.icon}`}
+                    initial={{ scale: 0 }}
+                    transition={{
+                      damping: 15,
+                      delay: 0.25 + index * 0.08,
+                      stiffness: 300,
+                      type: "spring",
+                    }}
+                    viewport={{ once: true }}
+                    whileHover={{ scale: 1.12 }}
+                    whileInView={{ scale: 1 }}
+                    whileTap={{ scale: 0.92 }}
                   >
                     <Icon className="size-4" />
-                  </div>
+                  </motion.div>
 
                   <div className="min-w-0 flex-1 pt-1">
                     <div className="flex items-center justify-between gap-2">
@@ -124,11 +184,12 @@ export default function RecentActivities() {
                         {activity.name}
                       </p>
 
-                      <span
+                      <motion.span
                         className={`shrink-0 font-semibold text-xs ${colors.text}`}
+                        whileHover={{ scale: 1.05 }}
                       >
                         {activity.amount}
-                      </span>
+                      </motion.span>
                     </div>
 
                     <div className="mt-0.5 flex items-center gap-2">
@@ -147,12 +208,12 @@ export default function RecentActivities() {
                       </span>
                     </div>
                   </div>
-                </div>
+                </motion.div>
               );
             })}
           </div>
         </div>
       </div>
-    </div>
+    </motion.div>
   );
 }
