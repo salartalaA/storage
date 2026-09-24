@@ -129,7 +129,7 @@ export default function RecentActivities() {
             </h3>
           </div>
 
-          <span className="text-[11px] text-muted-foreground">{"امروز"}</span>
+          <span className="text-muted-foreground text-xs">{"امروز"}</span>
         </motion.div>
 
         {/* Timeline */}
@@ -193,17 +193,15 @@ export default function RecentActivities() {
                     </div>
 
                     <div className="mt-0.5 flex items-center gap-2">
-                      <span
-                        className={`font-medium text-[11px] ${colors.text}`}
-                      >
+                      <span className={`font-medium text-xs ${colors.text}`}>
                         {activity.type}
                       </span>
 
-                      <span className="text-[11px] text-muted-foreground/40">
+                      <span className="text-muted-foreground/40 text-xs">
                         •
                       </span>
 
-                      <span className="text-[11px] text-muted-foreground">
+                      <span className="text-muted-foreground text-xs">
                         {activity.time}
                       </span>
                     </div>

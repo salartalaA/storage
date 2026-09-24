@@ -99,7 +99,7 @@ export default function ExpiringProducts() {
           </div>
 
           <motion.span
-            className="flex size-6 items-center justify-center rounded-full bg-warning/10 font-bold text-[11px] text-warning"
+            className="flex size-6 items-center justify-center rounded-full bg-warning/10 font-bold text-warning text-xs"
             initial={{ scale: 0 }}
             transition={{
               damping: 15,
@@ -146,13 +146,13 @@ export default function ExpiringProducts() {
                     </p>
 
                     <div className="mt-0.5 flex items-center gap-2">
-                      <span className="text-[11px] text-muted-foreground">
+                      <span className="text-muted-foreground text-xs">
                         {product.date}
                       </span>
 
                       <span className="text-muted-foreground/40">•</span>
 
-                      <span className="text-[11px] text-muted-foreground">
+                      <span className="text-muted-foreground text-xs">
                         {product.quantity}
                       </span>
                     </div>

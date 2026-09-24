@@ -38,7 +38,7 @@ export function StatCard({
             <Icon size={19} strokeWidth={2} />
           </span>
           <div
-            className={`flex items-center gap-x-1 rounded-full border border-foreground/5 bg-background/30 px-2 py-1 text-[11px] backdrop-blur-md ${trendClass}`}
+            className={`flex items-center gap-x-1 rounded-full border border-foreground/5 bg-background/30 px-2 py-1 text-xs backdrop-blur-md ${trendClass}`}
           >
             <TrendIcon size={11} strokeWidth={2.5} /> <span>{trend}</span>
           </div>
@@ -52,9 +52,7 @@ export function StatCard({
         {/* Description */}
         <div className="mt-3 flex flex-col gap-y-1">
           <span className="font-semibold text-foreground text-sm">{title}</span>
-          <span className="text-[11px] text-muted-foreground">
-            {description}
-          </span>
+          <span className="text-muted-foreground text-xs">{description}</span>
         </div>
       </div>
     </div>
