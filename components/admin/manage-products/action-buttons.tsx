@@ -1,35 +1,26 @@
-import { Minus, Plus, Trash2 } from "lucide-react";
-import { Button } from "@/components/ui/button";
+"use client";
+import ManageInventoryDialog from "@/components/admin/manage-products/inventory/manage-inventory-dialog";
+import type { StockItem } from "@/components/admin/manage-products/stock-item-card";
 
-export default function ActionButtons() {
+export default function ActionButtons({ item }: { item: StockItem }) {
+  const handleActionClick = (e: React.MouseEvent) => {
+    e.stopPropagation();
+  };
+
   return (
-    <div className="grid grid-cols-3 gap-2">
-      <Button
-        className="h-9 rounded-xl border border-success/15 bg-success/6 font-medium text-success text-xs shadow-none hover:bg-success/10 hover:text-success"
-        type="button"
-        variant="ghost"
-      >
-        <Plus className="size-3.5" />
-        {"افزایش"}
-      </Button>
+    // biome-ignore lint/a11y/noNoninteractiveElementInteractions: intentional interaction
+    // biome-ignore lint/a11y/noStaticElementInteractions: intentional interaction
+    // biome-ignore lint/a11y/useKeyWithClickEvents: intentional interaction
+    <div
+      className="grid grid-cols-3 gap-2"
+      onClick={handleActionClick}
+      onPointerDown={handleActionClick}
+    >
+      <ManageInventoryDialog item={item} mode="increase" />
 
-      <Button
-        className="h-9 rounded-xl border border-primary/15 bg-primary/6 font-medium text-primary text-xs shadow-none hover:bg-primary/10 hover:text-primary"
-        type="button"
-        variant="ghost"
-      >
-        <Minus className="size-3.5" />
-        {"کاهش"}
-      </Button>
+      <ManageInventoryDialog item={item} mode="decrease" />
 
-      <Button
-        className="h-9 rounded-xl border border-destructive/15 bg-destructive/6 font-medium text-destructive text-xs shadow-none hover:bg-destructive/10 hover:text-destructive"
-        type="button"
-        variant="ghost"
-      >
-        <Trash2 className="size-3.5" />
-        {"دورریز"}
-      </Button>
+      <ManageInventoryDialog item={item} mode="disable" />
     </div>
   );
 }
