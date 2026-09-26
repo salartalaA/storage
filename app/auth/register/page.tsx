@@ -14,10 +14,7 @@ export default async function RegisterPage() {
   return (
     <main className="relative flex min-h-screen items-center justify-center overflow-hidden bg-background px-3 text-foreground sm:px-0">
       {/* Card */}
-      <div className="relative z-10 w-full max-w-md rounded-[1.75rem] border border-foreground/8 bg-card/4.5 p-6 shadow-[0_8px_40px_rgba(0,0,0,0.35)] backdrop-blur-[18px] sm:p-9">
-        {/* Card glow */}
-        <div className="pointer-events-none absolute inset-0 -z-10 rounded-[1.75rem] bg-primary/[0.035] blur-2xl" />
-
+      <div className="z-10 w-full max-w-md rounded-[1.75rem] border border-foreground/8 bg-card/4.5 p-6 shadow-[0_8px_40px_rgba(0,0,0,0.35)] backdrop-blur-[18px] sm:p-9">
         {/* Brand */}
         <div className="flex flex-col items-center justify-center gap-3">
           <span className="rounded-2xl border border-primary/20 bg-primary/15 p-2.5 shadow-[0_0_25px_rgba(59,130,246,0.18)] backdrop-blur-md">
