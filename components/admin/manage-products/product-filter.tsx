@@ -72,21 +72,17 @@ export default function ProductFilters() {
 
   return (
     <motion.div
+      animate="visible"
       className="flex flex-col gap-2.5"
       initial="hidden"
       variants={{
         hidden: {},
         visible: {
           transition: {
-            staggerChildren: 0.05,
+            staggerChildren: 0.02,
           },
         },
       }}
-      viewport={{
-        amount: 0.2,
-        once: true,
-      }}
-      whileInView="visible"
     >
       {/* Categories */}
       <motion.div
@@ -95,7 +91,7 @@ export default function ProductFilters() {
           hidden: {},
           visible: {
             transition: {
-              staggerChildren: 0.05,
+              staggerChildren: 0.02,
             },
           },
         }}
@@ -107,7 +103,7 @@ export default function ProductFilters() {
             <motion.div
               key={category.label}
               transition={{
-                duration: 0.3,
+                duration: 0.2,
                 ease: "easeOut",
               }}
               variants={itemVariants}
@@ -116,7 +112,7 @@ export default function ProductFilters() {
                 className={`relative flex shrink-0 items-center gap-1.5 rounded-2xl px-3.5 py-1.5 font-medium text-xs transition-colors duration-200 ${
                   active
                     ? "text-primary-foreground"
-                    : "border border-foreground/8 bg-card/4.5 text-muted-foreground backdrop-blur-[18px] hover:border-foreground/15 hover:bg-card/8 hover:text-foreground"
+                    : "border border-foreground/8 bg-card/4.5 text-muted-foreground hover:border-foreground/15 hover:bg-card/8 hover:text-foreground"
                 }`}
                 // biome-ignore lint/performance/noJsxPropsBind: No problem for performance
                 onClick={() => setActiveCategory(category.label)}
@@ -148,8 +144,8 @@ export default function ProductFilters() {
             hidden: {},
             visible: {
               transition: {
-                delayChildren: 0.1,
-                staggerChildren: 0.05,
+                delayChildren: 0.04,
+                staggerChildren: 0.02,
               },
             },
           }}
@@ -161,7 +157,7 @@ export default function ProductFilters() {
               <motion.div
                 key={status.label}
                 transition={{
-                  duration: 0.3,
+                  duration: 0.2,
                   ease: "easeOut",
                 }}
                 variants={itemVariants}
@@ -170,7 +166,7 @@ export default function ProductFilters() {
                   className={`relative flex shrink-0 items-center gap-1.5 rounded-2xl px-3.5 py-1.5 font-medium text-xs transition-colors duration-200 ${
                     active
                       ? "text-primary-foreground"
-                      : "border border-foreground/8 bg-card/4.5 text-muted-foreground backdrop-blur-[18px] hover:border-foreground/15 hover:bg-card/8 hover:text-foreground"
+                      : "border border-foreground/8 bg-card/4.5 text-muted-foreground hover:border-foreground/15 hover:bg-card/8 hover:text-foreground"
                   }`}
                   // biome-ignore lint/performance/noJsxPropsBind: No problem for performance
                   onClick={() => setActiveStatus(status.label)}
@@ -196,21 +192,13 @@ export default function ProductFilters() {
 
         {/* Products count badge */}
         <motion.div
+          animate={{ opacity: 1, scale: 1 }}
           className="flex w-fit shrink-0 items-center gap-1 rounded-full bg-primary/10 p-2 px-2.5 py-1 text-primary"
+          initial={{ opacity: 0, scale: 0.9 }}
           transition={{
-            delay: 0.25,
-            duration: 0.3,
+            delay: 0.1,
+            duration: 0.2,
             ease: "easeOut",
-          }}
-          variants={{
-            hidden: {
-              opacity: 0,
-              scale: 0.9,
-            },
-            visible: {
-              opacity: 1,
-              scale: 1,
-            },
           }}
         >
           <div className="flex items-center gap-1">

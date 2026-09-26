@@ -54,7 +54,7 @@ export function StockItemCard({ item }: { item: StockItem }) {
 
   return (
     <motion.div
-      className="group relative overflow-hidden rounded-3xl border border-foreground/8 bg-card/4.5 p-4 shadow-[0_8px_40px_rgba(0,0,0,0.3)] backdrop-blur-[18px] transition-all duration-300 hover:border-foreground/12 hover:bg-card/6 hover:shadow-[0_10px_42px_rgba(0,0,0,0.35)]"
+      className="group relative overflow-hidden rounded-3xl border border-foreground/8 bg-card/4.5 p-4 shadow-[0_5px_24px_rgba(0,0,0,0.25)] backdrop-blur-[6px] transition-all duration-300 hover:border-foreground/12 hover:bg-card/6 hover:shadow-[0_10px_42px_rgba(0,0,0,0.35)] sm:shadow-[0_8px_40px_rgba(0,0,0,0.3)] sm:backdrop-blur-[18px]"
       initial={{ opacity: 0 }}
       transition={{ delay: 0.1, duration: 0.6, ease: "easeOut" }}
       viewport={viewport}

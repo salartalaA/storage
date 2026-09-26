@@ -25,7 +25,7 @@ export function InventoryCard({
 }: InventoryCardProps) {
   return (
     <div
-      className="group relative overflow-hidden rounded-2xl border border-foreground/7 bg-card/4.5 p-3.5 backdrop-blur-[18px] transition-colors duration-200 hover:border-foreground/12 hover:bg-card/6"
+      className="group relative overflow-hidden rounded-2xl border border-foreground/7 bg-card/4.5 p-3.5 transition-colors duration-200 hover:border-foreground/12 hover:bg-card/6 sm:backdrop-blur-[18px]"
       key={inventory.id}
     >
       <div className="pointer-events-none absolute inset-x-0 top-0 h-px bg-linear-to-r from-transparent via-foreground/8 to-transparent" />
