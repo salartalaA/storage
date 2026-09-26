@@ -13,7 +13,7 @@ export default function AdminHeader() {
   return (
     <motion.header
       animate={{ opacity: 1, y: 0 }}
-      className="group relative overflow-hidden rounded-3xl border border-foreground/8 bg-card/4.5 p-5 shadow-[0_4px_20px_rgba(0,0,0,0.25)] backdrop-blur-sm transition-colors duration-300 hover:border-foreground/12 sm:shadow-[0_8px_40px_rgba(0,0,0,0.35)] sm:backdrop-blur-[18px]"
+      className="group relative overflow-hidden rounded-3xl border border-foreground/8 bg-card/4.5 p-5 shadow-[0_4px_20px_rgba(0,0,0,0.25)] backdrop-blur-xs transition-colors duration-300 hover:border-foreground/12 sm:shadow-[0_8px_40px_rgba(0,0,0,0.35)] sm:backdrop-blur-[18px]"
       initial={{ opacity: 0, y: -10 }}
       transition={{ duration: 0.45, ease: [0.22, 1, 0.36, 1] }}
     >

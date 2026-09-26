@@ -52,7 +52,7 @@ const colorClasses = {
 export default function ExpiringProducts() {
   return (
     <motion.div
-      className="group relative overflow-hidden rounded-3xl border border-foreground/8 bg-card/4.5 p-5 shadow-[0_8px_40px_rgba(0,0,0,0.35)] backdrop-blur-[18px] transition-colors duration-300 hover:border-foreground/12 hover:bg-card/6.5 hover:shadow-[0_12px_45px_rgba(0,0,0,0.42)]"
+      className="group relative overflow-hidden rounded-3xl border border-foreground/8 bg-card/4.5 p-5 shadow-[0_8px_40px_rgba(0,0,0,0.35)] backdrop-blur-sm transition-colors duration-300 hover:border-foreground/12 hover:bg-card/6.5 hover:shadow-[0_12px_45px_rgba(0,0,0,0.42)] md:backdrop-blur-[18px]"
       initial={{ opacity: 0, scale: 0.98, y: 20 }}
       transition={{ duration: 0.5, ease: [0.16, 1, 0.3, 1] }}
       viewport={{ once: true }}
@@ -71,9 +71,6 @@ export default function ExpiringProducts() {
         viewport={{ once: true }}
         whileInView={{ opacity: [0.3, 0.8, 0.3] }}
       />
-
-      {/* Subtle colored glow */}
-      <div className="pointer-events-none absolute -top-12 -right-12 size-28 rounded-full bg-primary/4.5 blur-3xl transition-all duration-300 group-hover:bg-primary/8" />
 
       <div className="relative">
         {/* Header */}

@@ -46,7 +46,7 @@ const chartConfig = {
 export default function StockStatus() {
   return (
     <motion.div
-      className="group relative overflow-hidden rounded-3xl border border-foreground/8 bg-card/4.5 p-5 shadow-[0_8px_40px_rgba(0,0,0,0.35)] backdrop-blur-[18px] transition-colors duration-300 hover:border-foreground/12 hover:bg-card/6.5 hover:shadow-[0_12px_45px_rgba(0,0,0,0.42)]"
+      className="group relative overflow-hidden rounded-3xl border border-foreground/8 bg-card/4.5 p-5 shadow-[0_8px_40px_rgba(0,0,0,0.35)] backdrop-blur-xs transition-colors duration-300 hover:border-foreground/12 hover:bg-card/6.5 hover:shadow-[0_12px_45px_rgba(0,0,0,0.42)] sm:backdrop-blur-[18px]"
       initial={{ opacity: 0, scale: 0.98, y: 16 }}
       transition={{ duration: 0.55, ease: [0.16, 1, 0.3, 1] }}
       viewport={{ once: true }}
@@ -55,27 +55,25 @@ export default function StockStatus() {
     >
       {/* Glass reflection */}
       <motion.div
+        animate={{ opacity: [0.3, 0.8, 0.3] }}
         className="pointer-events-none absolute inset-x-0 top-0 h-px bg-linear-to-r from-transparent via-foreground/12 to-transparent"
-        initial={{ opacity: 0 }}
         transition={{
           duration: 4,
           ease: "easeInOut",
           repeat: Number.POSITIVE_INFINITY,
         }}
-        viewport={{ once: true }}
-        whileInView={{ opacity: [0.3, 0.8, 0.3] }}
       />
-
-      {/* Subtle colored glow */}
-      <div className="pointer-events-none absolute -top-12 -right-12 size-28 rounded-full bg-primary/4.5 blur-3xl transition-all duration-300 group-hover:bg-primary/8" />
 
       {/* Header */}
       <motion.div
+        animate={{ opacity: 1, y: 0 }}
         className="relative mb-1 flex items-center justify-between"
         initial={{ opacity: 0, y: 10 }}
-        transition={{ delay: 0.1, duration: 0.45, ease: [0.16, 1, 0.3, 1] }}
-        viewport={{ once: true }}
-        whileInView={{ opacity: 1, y: 0 }}
+        transition={{
+          delay: 0.1,
+          duration: 0.45,
+          ease: [0.16, 1, 0.3, 1],
+        }}
       >
         <div className="flex items-center gap-x-2">
           <motion.span
@@ -93,12 +91,14 @@ export default function StockStatus() {
         <span className="text-muted-foreground text-xs">{"۲۴۵ محصول"}</span>
       </motion.div>
 
-      {/* Chart */}
       <motion.div
+        animate={{ opacity: 1, scale: 1 }}
         initial={{ opacity: 0, scale: 0.92 }}
-        transition={{ delay: 0.18, duration: 0.5, ease: [0.16, 1, 0.3, 1] }}
-        viewport={{ once: true }}
-        whileInView={{ opacity: 1, scale: 1 }}
+        transition={{
+          delay: 0.18,
+          duration: 0.5,
+          ease: [0.16, 1, 0.3, 1],
+        }}
       >
         <ChartContainer
           className="mx-auto aspect-square max-h-[200px] w-full"
@@ -126,11 +126,14 @@ export default function StockStatus() {
 
       {/* Footer Stats */}
       <motion.div
+        animate={{ opacity: 1, y: 0 }}
         className="mt-2 flex justify-center gap-6"
         initial={{ opacity: 0, y: 10 }}
-        transition={{ delay: 0.28, duration: 0.45, ease: [0.16, 1, 0.3, 1] }}
-        viewport={{ once: true }}
-        whileInView={{ opacity: 1, y: 0 }}
+        transition={{
+          delay: 0.28,
+          duration: 0.45,
+          ease: [0.16, 1, 0.3, 1],
+        }}
       >
         <div className="space-y-1 text-center">
           <p className="text-muted-foreground text-xs">{"نرخ موجودی"}</p>
@@ -138,11 +141,10 @@ export default function StockStatus() {
         </div>
 
         <motion.div
+          animate={{ opacity: 1, scaleY: 1 }}
           className="w-px bg-border/50"
           initial={{ opacity: 0, scaleY: 0 }}
           transition={{ delay: 0.32, duration: 0.4 }}
-          viewport={{ once: true }}
-          whileInView={{ opacity: 1, scaleY: 1 }}
         />
 
         <div className="space-y-1 text-center">
