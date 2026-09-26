@@ -1,10 +1,18 @@
+import { redirect } from "next/navigation";
+import { getCurrentStore } from "@/actions/auth";
 import AdminHeader from "@/components/admin/admin-header";
 import ProductFilters from "@/components/admin/manage-products/product-filter";
 import SearchBox from "@/components/admin/manage-products/search-box";
 import type { StockItem } from "@/components/admin/manage-products/stock-item-card";
 import { StockItemDialog } from "@/components/admin/manage-products/stock-item-dialog";
 
-export default function ManageProductsPage() {
+export default async function ManageProductsPage() {
+  const currentStore = await getCurrentStore();
+
+  if (!currentStore) {
+    return redirect("/auth/login");
+  }
+
   const stockItems: StockItem[] = [
     {
       barcode: "6266789012346",
