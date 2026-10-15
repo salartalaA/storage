@@ -49,7 +49,7 @@ export default function Footer() {
 
   return (
     <footer className="mt-17 flex w-full items-center justify-center">
-      <nav className="fixed bottom-3 z-50 flex max-w-sm items-center justify-center rounded-full border bg-card-foreground/5 p-1.5 backdrop-blur-md">
+      <nav className="fixed bottom-3 z-50 flex max-w-sm items-center justify-center rounded-3xl border bg-card-foreground/5 p-1.5 backdrop-blur-md">
         {navigationItems.map((navItem) => {
           const Icon = navItem.icon;
           const isActive = pathname === navItem.href;
