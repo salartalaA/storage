@@ -31,7 +31,7 @@ export function AddLocationDialog() {
 
         <DialogHeader className="space-y-0 px-5 pt-5 pb-3 text-right">
           <div className="flex items-center gap-3">
-            <div className="flex size-9 shrink-0 items-center justify-center rounded-lg border border-primary/15 bg-primary/10">
+            <div className="flex size-9 shrink-0 items-center justify-center rounded-xl border border-primary/15 bg-primary/10">
               <Plus className="size-4 text-primary" />
             </div>
 
@@ -60,7 +60,7 @@ export function AddLocationDialog() {
               <MapPin className="pointer-events-none absolute top-1/2 right-3 size-4 -translate-y-1/2 text-muted-foreground" />
 
               <Input
-                className="h-10 rounded-lg border-foreground/8 pr-10 text-sm transition-colors placeholder:text-muted-foreground focus-visible:border-primary/40 focus-visible:ring-primary/20"
+                className="h-10 rounded-xl border-foreground/8 pr-10 text-sm transition-colors placeholder:text-muted-foreground focus-visible:border-primary/40 focus-visible:ring-primary/20"
                 id="location-name"
                 placeholder="مثال: انبار اصلی"
               />

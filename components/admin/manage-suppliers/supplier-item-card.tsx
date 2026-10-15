@@ -1,9 +1,41 @@
 "use client";
 
 import { MapPin, Phone, Truck, User } from "lucide-react";
+import { motion } from "motion/react";
 import { DeleteSupplierDialog } from "@/components/admin/manage-suppliers/delete-supplier-dialog";
 import { EditSupplierDialog } from "@/components/admin/manage-suppliers/edit-supplier-dialog";
 import { Separator } from "@/components/ui/separator";
+
+const cardVariants = {
+  hidden: {
+    opacity: 0,
+    y: 12,
+  },
+  visible: {
+    opacity: 1,
+    transition: {
+      duration: 0.3,
+      ease: "easeOut" as const,
+      staggerChildren: 0.06,
+    },
+    y: 0,
+  },
+};
+
+const itemVariants = {
+  hidden: {
+    opacity: 0,
+    y: 6,
+  },
+  visible: {
+    opacity: 1,
+    transition: {
+      duration: 0.25,
+      ease: "easeOut" as const,
+    },
+    y: 0,
+  },
+};
 
 interface SupplierCardProps {
   address?: string;
@@ -19,8 +51,18 @@ export function SupplierItemCard({
   contact = "رضا صادقی",
 }: SupplierCardProps) {
   return (
-    <div className="rounded-3xl border border-foreground/8 bg-card/4.5 p-4 shadow-[0_5px_24px_rgba(0,0,0,0.25)] backdrop-blur-[6px] transition-[border-color,background-color,box-shadow] duration-300 hover:border-foreground/12 hover:bg-card/6 hover:shadow-[0_10px_42px_rgba(0,0,0,0.35)] sm:shadow-[0_8px_40px_rgba(0,0,0,0.3)] sm:backdrop-blur-[18px]">
-      <div className="flex items-start gap-3">
+    <motion.div
+      animate="visible"
+      className="rounded-3xl border border-foreground/8 bg-card/4.5 p-4 shadow-[0_5px_24px_rgba(0,0,0,0.25)] backdrop-blur-[6px] transition-[border-color,background-color,box-shadow] duration-300 hover:border-foreground/12 hover:bg-card/6 hover:shadow-[0_10px_42px_rgba(0,0,0,0.35)] sm:shadow-[0_8px_40px_rgba(0,0,0,0.3)] sm:backdrop-blur-[18px]"
+      initial="hidden"
+      variants={cardVariants}
+      whileHover={{
+        transition: { duration: 0.2, ease: "easeOut" },
+        y: -2,
+      }}
+      whileTap={{ scale: 0.99 }}
+    >
+      <motion.div className="flex items-start gap-3" variants={itemVariants}>
         <div className="flex size-9 shrink-0 items-center justify-center rounded-xl bg-primary/10">
           <Truck className="size-4 text-primary" />
         </div>
@@ -50,15 +92,22 @@ export function SupplierItemCard({
             <span className="line-clamp-1">{address}</span>
           </div>
         </div>
-      </div>
+      </motion.div>
 
-      <Separator className="my-3 bg-foreground/5" />
+      <motion.div variants={itemVariants}>
+        <Separator className="my-3 bg-foreground/5" />
+      </motion.div>
 
-      <div className="flex items-center gap-2">
+      <motion.div
+        className="flex items-center gap-2"
+        // biome-ignore lint/performance/noJsxPropsBind: Need for stop propagation on dialog trigger
+        onClick={(e) => e.stopPropagation()}
+        variants={itemVariants}
+      >
         <EditSupplierDialog />
 
         <DeleteSupplierDialog />
-      </div>
-    </div>
+      </motion.div>
+    </motion.div>
   );
 }
