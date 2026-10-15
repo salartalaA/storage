@@ -180,10 +180,7 @@ export function LocationDetailDialog({ location }: { location: Location }) {
           </ScrollArea>
         </section>
 
-        <DialogClose
-          aria-label="بستن"
-          className="absolute top-2 right-2 flex size-7 items-center justify-center rounded-[min(var(--radius-md),12px)] text-muted-foreground transition-colors hover:bg-muted hover:text-foreground"
-        >
+        <DialogClose className="absolute top-2 right-2 flex size-7 items-center justify-center rounded-[min(var(--radius-md),12px)] text-muted-foreground transition-colors hover:bg-muted hover:text-foreground">
           <X className="size-4" />
         </DialogClose>
       </DialogContent>

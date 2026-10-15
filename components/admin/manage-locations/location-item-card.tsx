@@ -1,8 +1,9 @@
 "use client";
 
-import { MapPin, Package, Pencil, Trash2 } from "lucide-react";
+import { MapPin, Package } from "lucide-react";
 import { motion } from "motion/react";
-import { Button } from "@/components/ui/button";
+import { ChangeLocationNameDialog } from "@/components/admin/manage-locations/change-location-name-dialog";
+import { DeleteLocationDialog } from "@/components/admin/manage-locations/delete-location-dialog";
 import { Separator } from "@/components/ui/separator";
 
 const cardVariants = {
@@ -84,22 +85,15 @@ export default function LocationItemCard({
         <Separator className="my-3 h-px shrink-0 bg-foreground/5" />
       </motion.div>
 
-      <motion.div className="flex items-center gap-2" variants={itemVariants}>
-        <Button
-          className="h-8 flex-1 gap-1.5 rounded-xl border border-primary/15 bg-primary/5 px-3 font-medium text-primary text-xs hover:bg-primary/10 hover:text-primary"
-          variant="outline"
-        >
-          <Pencil className="h-3.5 w-3.5" />
-          ویرایش
-        </Button>
+      <motion.div
+        className="flex items-center gap-2"
+        // biome-ignore lint/performance/noJsxPropsBind: Need for stop propagation on dialog trigger
+        onClick={(e) => e.stopPropagation()}
+        variants={itemVariants}
+      >
+        <ChangeLocationNameDialog />
 
-        <Button
-          className="h-8 flex-1 gap-1.5 rounded-xl border border-destructive/15 bg-destructive/5 px-3 font-medium text-destructive text-xs hover:bg-destructive/10 hover:text-destructive disabled:cursor-not-allowed disabled:opacity-40"
-          variant="outline"
-        >
-          <Trash2 className="h-3.5 w-3.5" />
-          حذف
-        </Button>
+        <DeleteLocationDialog />
       </motion.div>
     </motion.div>
   );

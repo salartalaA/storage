@@ -1,10 +1,9 @@
-import { Plus } from "lucide-react";
 import { redirect } from "next/navigation";
 import { getCurrentStore } from "@/actions/auth";
 import AdminHeader from "@/components/admin/admin-header";
+import { AddLocationDialog } from "@/components/admin/manage-locations/add-ocation-dialog";
 import { LocationDetailDialog } from "@/components/admin/manage-locations/location-item-dialog";
 import SearchLocation from "@/components/admin/manage-locations/search-location";
-import { Button } from "@/components/ui/button";
 
 export interface LocationInventory {
   barcode: string;
@@ -106,10 +105,7 @@ export default async function ManageProductsPage() {
           <div className="fade-in slide-in-from-bottom-2 flex animate-in items-center justify-between duration-500">
             <span className="text-muted-foreground text-xs">8 مکان</span>
 
-            <Button className="flex items-center gap-1 rounded-2xl text-xs">
-              <Plus size={14} />
-              <span>افزودن مکان</span>
-            </Button>
+            <AddLocationDialog />
           </div>
 
           {locations.map((location) => (
