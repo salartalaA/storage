@@ -73,7 +73,7 @@ export default async function Dashboard() {
 
   return (
     <main className="relative flex min-h-screen flex-col items-center overflow-hidden px-3">
-      <div className="relative z-10 my-6 flex w-full max-w-2xl flex-col gap-y-4">
+      <div className="relative z-10 my-6 flex w-full max-w-sm flex-col gap-y-4">
         <AdminHeader />
 
         {/* Statistics */}

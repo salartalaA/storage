@@ -62,7 +62,7 @@ export default async function ManageProductsPage() {
 
   return (
     <main className="flex min-h-screen flex-col items-center overflow-hidden px-3">
-      <div className="my-6 flex w-full max-w-2xl flex-col gap-y-4">
+      <div className="my-6 flex w-full max-w-sm flex-col gap-y-4">
         <AdminHeader />
 
         <SearchBox />
