@@ -139,7 +139,7 @@ export function StockItemDialog({ item }: { item: StockItem }) {
         }
       />
 
-      <DialogContent className="w-[calc(100%-1.5rem)] max-w-2xl! gap-0 overflow-hidden rounded-3xl border-foreground/10 bg-background/95 p-0 shadow-[0_20px_80px_rgba(0,0,0,0.5)] sm:w-full">
+      <DialogContent className="w-[calc(100%-1.5rem)] max-w-sm! gap-0 overflow-hidden rounded-3xl border-foreground/10 bg-background/95 p-0 shadow-[0_20px_80px_rgba(0,0,0,0.5)] sm:w-full">
         <div className="pointer-events-none absolute inset-x-0 top-0 h-px bg-linear-to-r from-transparent via-foreground/12 to-transparent" />
         <DialogHeader className="space-y-0 px-5 pt-5 pb-4 text-right">
           <div className="flex items-start gap-3">

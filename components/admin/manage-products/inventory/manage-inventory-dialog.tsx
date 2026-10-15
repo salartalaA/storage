@@ -215,7 +215,7 @@ export default function ManageInventoryDialog({
       />
 
       <DialogContent
-        className="w-[calc(100%-1.5rem)] max-w-xl! gap-0 overflow-hidden rounded-3xl border-foreground/10 bg-background/95 p-0 shadow-[0_20px_80px_rgba(0,0,0,0.5)] backdrop-blur-2xl"
+        className="w-[calc(100%-1.5rem)] max-w-sm! gap-0 overflow-hidden rounded-3xl border-foreground/10 bg-background/95 p-0 shadow-[0_20px_80px_rgba(0,0,0,0.5)] backdrop-blur-2xl"
         dir="rtl"
       >
         <DialogHeader className="px-5 pt-5 pb-4 text-right">

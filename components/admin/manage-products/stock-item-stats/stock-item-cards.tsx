@@ -24,7 +24,7 @@ export default function StockItemCards({
 
   return (
     <div className="px-5 pb-4">
-      <div className="grid grid-cols-2 gap-2 sm:grid-cols-4">
+      <div className="grid grid-cols-2 gap-2">
         <div className="rounded-xl border border-foreground/7 bg-card/4.5 p-3 backdrop-blur-[18px]">
           <div className="flex items-center gap-1.5 text-muted-foreground">
             <Boxes className="size-3.5" />
