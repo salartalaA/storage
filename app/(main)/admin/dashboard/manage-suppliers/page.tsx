@@ -3,6 +3,7 @@ import { redirect } from "next/navigation";
 import { getCurrentStore } from "@/actions/auth";
 import AdminHeader from "@/components/admin/admin-header";
 import SearchSuppliers from "@/components/admin/manage-suppliers/search-suppliers";
+import { SupplierItemCard } from "@/components/admin/manage-suppliers/supplier-item-card";
 import { Button } from "@/components/ui/button";
 
 export default async function ManageSuppliersPage() {
@@ -28,6 +29,8 @@ export default async function ManageSuppliersPage() {
               <span>افزودن تامین‌کننده</span>
             </Button>
           </div>
+
+          <SupplierItemCard />
         </div>
       </div>
     </main>
