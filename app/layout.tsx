@@ -36,10 +36,10 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
         {children}
 
         <Toaster
-          position="top-right"
+          position="top-center"
           toastOptions={{
             className:
-              "border-border/60! bg-card/80! text-foreground! shadow-[0_8px_30px_rgba(0,0,0,0.35)]! backdrop-blur-xl! font-vazir!",
+              "shadow-[0_8px_30px_rgba(0,0,0,0.35)]! backdrop-blur-xl! font-vazir!",
             classNames: {
               closeButton:
                 "border-border/60! bg-background/50! text-muted-foreground! hover:bg-background/80! hover:text-foreground!",
