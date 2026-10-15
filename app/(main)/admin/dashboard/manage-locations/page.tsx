@@ -1,7 +1,7 @@
 import { redirect } from "next/navigation";
 import { getCurrentStore } from "@/actions/auth";
 import AdminHeader from "@/components/admin/admin-header";
-import { AddLocationDialog } from "@/components/admin/manage-locations/add-ocation-dialog";
+import { AddLocationDialog } from "@/components/admin/manage-locations/add-location-dialog";
 import { LocationDetailDialog } from "@/components/admin/manage-locations/location-item-dialog";
 import SearchLocation from "@/components/admin/manage-locations/search-location";
 

@@ -60,7 +60,7 @@ export function AddLocationDialog() {
               <MapPin className="pointer-events-none absolute top-1/2 right-3 size-4 -translate-y-1/2 text-muted-foreground" />
 
               <Input
-                className="glass h-10 rounded-lg border-foreground/8 pr-10 text-sm transition-colors placeholder:text-muted-foreground focus-visible:border-primary/40 focus-visible:ring-primary/20"
+                className="h-10 rounded-lg border-foreground/8 pr-10 text-sm transition-colors placeholder:text-muted-foreground focus-visible:border-primary/40 focus-visible:ring-primary/20"
                 id="location-name"
                 placeholder="مثال: انبار اصلی"
               />
