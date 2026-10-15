@@ -23,7 +23,7 @@ export interface Location {
   stockCount: number;
 }
 
-export default async function ManageProductsPage() {
+export default async function ManageLocationsPage() {
   const currentStore = await getCurrentStore();
 
   if (!currentStore) {
