@@ -33,7 +33,7 @@ const navigationItems: NavigationItem[] = [
     title: "محصولات",
   },
   {
-    href: `${URL}/locations`,
+    href: `${URL}/manage-locations`,
     icon: MapPin,
     title: "لوکیشن‌ها",
   },
