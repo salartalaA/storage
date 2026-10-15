@@ -1,10 +1,9 @@
-import { Plus } from "lucide-react";
 import { redirect } from "next/navigation";
 import { getCurrentStore } from "@/actions/auth";
 import AdminHeader from "@/components/admin/admin-header";
+import { AddSupplierDialog } from "@/components/admin/manage-suppliers/add-supplier-dialog";
 import SearchSuppliers from "@/components/admin/manage-suppliers/search-suppliers";
 import { SupplierItemCard } from "@/components/admin/manage-suppliers/supplier-item-card";
-import { Button } from "@/components/ui/button";
 
 export default async function ManageSuppliersPage() {
   const currentStore = await getCurrentStore();
@@ -24,10 +23,7 @@ export default async function ManageSuppliersPage() {
           <div className="fade-in slide-in-from-bottom-2 flex animate-in items-center justify-between duration-500">
             <span className="text-muted-foreground text-xs">10 تامین‌کننده</span>
 
-            <Button className="flex items-center gap-1 rounded-2xl text-xs">
-              <Plus size={14} />
-              <span>افزودن تامین‌کننده</span>
-            </Button>
+            <AddSupplierDialog />
           </div>
 
           <SupplierItemCard />

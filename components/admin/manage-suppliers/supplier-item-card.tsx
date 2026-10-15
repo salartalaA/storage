@@ -1,7 +1,8 @@
 "use client";
 
-import { MapPin, Pencil, Phone, Trash2, Truck, User } from "lucide-react";
-import { Button } from "@/components/ui/button";
+import { MapPin, Phone, Truck, User } from "lucide-react";
+import { DeleteSupplierDialog } from "@/components/admin/manage-suppliers/delete-supplier-dialog";
+import { EditSupplierDialog } from "@/components/admin/manage-suppliers/edit-supplier-dialog";
 import { Separator } from "@/components/ui/separator";
 
 interface SupplierCardProps {
@@ -54,25 +55,9 @@ export function SupplierItemCard({
       <Separator className="my-3 bg-foreground/5" />
 
       <div className="flex items-center gap-2">
-        <Button
-          aria-label={`ویرایش ${name}`}
-          className="h-8 flex-1 gap-1.5 rounded-xl border border-primary/15 bg-primary/5 px-3 font-medium text-primary text-xs hover:bg-primary/10 hover:text-primary"
-          type="button"
-          variant="outline"
-        >
-          <Pencil className="size-3.5" />
-          ویرایش
-        </Button>
+        <EditSupplierDialog />
 
-        <Button
-          aria-label={`حذف ${name}`}
-          className="h-8 flex-1 gap-1.5 rounded-xl border border-destructive/15 bg-destructive/5 px-3 font-medium text-destructive text-xs hover:bg-destructive/10 hover:text-destructive"
-          type="button"
-          variant="outline"
-        >
-          <Trash2 className="size-3.5" />
-          حذف
-        </Button>
+        <DeleteSupplierDialog />
       </div>
     </div>
   );
