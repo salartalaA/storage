@@ -14,7 +14,7 @@ const chartData = [
   {
     fill: "color-mix(in oklch, var(--primary) 90%, transparent)",
     products: 230,
-    status: "inStock",
+    status: "IN_STOCK",
   },
   {
     fill: "color-mix(in oklch, var(--warning) 90%, transparent)",
@@ -24,16 +24,16 @@ const chartData = [
   {
     fill: "color-mix(in oklch, var(--destructive) 90%, transparent)",
     products: 3,
-    status: "closeToExpire",
+    status: "CLOSE_TO_EXPIRE",
   },
 ];
 
 const chartConfig = {
-  closeToExpire: {
+  CLOSE_TO_EXPIRE: {
     color: "var(--destructive)",
     label: "تاریخ انقضا",
   },
-  inStock: {
+  IN_STOCK: {
     color: "var(--primary)",
     label: "موجود",
   },
