@@ -38,7 +38,7 @@ const navigationItems: NavigationItem[] = [
     title: "لوکیشن‌ها",
   },
   {
-    href: `${URL}/suppliers`,
+    href: `${URL}/manage-suppliers`,
     icon: Container,
     title: "تامین‌کننده‌ها",
   },
