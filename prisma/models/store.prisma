@@ -9,6 +9,7 @@ model Store {
 
     sessions  Session[]
     suppliers Supplier[]
+    locations Location[]
 }
 
 model Session {
