@@ -37,19 +37,20 @@ const itemVariants = {
   },
 };
 
-interface SupplierCardProps {
-  address?: string;
-  contact?: string;
-  name?: string;
-  phone?: string;
+interface SupplierInfo {
+  address: string;
+  contactName: string;
+  isActive: boolean;
+  name: string;
+  phoneNumber: string;
 }
 
 export function SupplierItemCard({
-  name = "نوشیدنی کوکاکولا ایران",
-  phone = "02133445566",
-  address = "البرز، شهرک صنعتی sims، خیابان ۱۲",
-  contact = "رضا صادقی",
-}: SupplierCardProps) {
+  name,
+  phoneNumber,
+  address,
+  contactName,
+}: SupplierInfo) {
   return (
     <motion.div
       animate="visible"
@@ -74,7 +75,7 @@ export function SupplierItemCard({
             <Phone className="size-3.5 shrink-0" />
 
             <span className="font-mono tracking-wide" dir="ltr">
-              {phone}
+              {phoneNumber}
             </span>
           </div>
 
@@ -82,7 +83,7 @@ export function SupplierItemCard({
             <User className="size-3.5 shrink-0" />
 
             <span className="line-clamp-1" dir="ltr">
-              {contact}
+              {contactName}
             </span>
           </div>
 
