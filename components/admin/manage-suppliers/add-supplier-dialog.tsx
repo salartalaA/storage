@@ -85,6 +85,7 @@ export function AddSupplierDialog() {
                 id="supplier-name"
                 placeholder="مثال: پگاه صنعت"
                 {...register("name")}
+                autoComplete="off"
               />
 
               {errors.name && (
@@ -108,6 +109,7 @@ export function AddSupplierDialog() {
                 id="supplier-phone"
                 placeholder="مثال: 02188554477"
                 {...register("phoneNumber")}
+                autoComplete="off"
               />
 
               {errors.phoneNumber && (
@@ -130,6 +132,7 @@ export function AddSupplierDialog() {
                 id="supplier-contact"
                 placeholder="مثال: محمد رضایی"
                 {...register("contactName")}
+                autoComplete="off"
               />
 
               {errors.contactName && (
@@ -151,6 +154,7 @@ export function AddSupplierDialog() {
                 id="supplier-address"
                 placeholder="مثال: تهران، خیابان آزادی، پلاک ۱۲۰"
                 {...register("address")}
+                autoComplete="off"
               />
 
               {errors.address && (
