@@ -1,5 +1,6 @@
 import { redirect } from "next/navigation";
 import { getCurrentStore } from "@/actions/auth";
+import { getStoreLocations } from "@/actions/location";
 import AdminHeader from "@/components/admin/admin-header";
 import { AddLocationDialog } from "@/components/admin/manage-locations/add-location-dialog";
 import { LocationDetailDialog } from "@/components/admin/manage-locations/location-item-dialog";
@@ -23,6 +24,29 @@ export interface Location {
   stockCount: number;
 }
 
+// Template for locationInventories constant:
+// const locationInventories: Record<string, LocationInventory[]> = {
+//   "locationName": [
+//     {
+//       barcode: "string",
+//       expirationDate: "string",
+//       id: "string",
+//       productionDate: "string",
+//       productName: "string",
+//       quantity: number,
+//       unitPrice: "string",
+//     },
+//   ],
+// };
+
+// Template for locationStats constant:
+// const locationStats: Record<string, { productCount: number; stockCount: number }> = {
+//   "locationName": {
+//     productCount: number,
+//     stockCount: number,
+//   },
+// };
+
 export default async function ManageLocationsPage() {
   const currentStore = await getCurrentStore();
 
@@ -30,69 +54,16 @@ export default async function ManageLocationsPage() {
     return redirect("/auth/login");
   }
 
-  const locations: Location[] = [
-    {
-      id: "location-",
-      inventories: [
-        {
-          barcode: "6261234567891",
-          expirationDate: "۱۴۰۵/۰۷/۱۰",
-          id: "inventory-1",
-          productionDate: "۱۴۰۵/۰۶/۱۰",
-          productName: "شیر کم‌چرب پگاه",
-          quantity: 24,
-          unitPrice: "۸۵٬۰۰۰",
-        },
-        {
-          barcode: "6264567890124",
-          expirationDate: "۱۴۰۷/۰۶/۰۱",
-          id: "inventory-2",
-          productionDate: "۱۴۰۵/۰۶/۰۱",
-          productName: "آب معدنی دماوند",
-          quantity: 60,
-          unitPrice: "۱۵٬۰۰۰",
-        },
-        {
-          barcode: "6266789012346",
-          expirationDate: "۱۴۰۷/۰۳/۰۱",
-          id: "inventory-3",
-          productionDate: "۱۴۰۵/۰۳/۰۱",
-          productName: "برنج طارم گلستان",
-          quantity: 20,
-          unitPrice: "۸۵۰٬۰۰۰",
-        },
-      ],
-      name: "انبار اصلی",
-      productCount: 4,
-      stockCount: 3,
-    },
-    {
-      id: "location-2",
-      inventories: [
-        {
-          barcode: "6268901234568",
-          expirationDate: "۱۴۰۸/۰۲/۰۱",
-          id: "inventory-4",
-          productionDate: "۱۴۰۵/۰۲/۰۱",
-          productName: "دستمال کاغذی سافتلن",
-          quantity: 4,
-          unitPrice: "۹۵٬۰۰۰",
-        },
-        {
-          barcode: "6265556667778",
-          expirationDate: "۱۴۰۸/۰۱/۱۵",
-          id: "inventory-5",
-          productionDate: "۱۴۰۵/۰۱/۱۵",
-          productName: "دستمال توالت بچه",
-          quantity: 0,
-          unitPrice: "۷۰٬۰۰۰",
-        },
-      ],
-      name: "انبار پشتی",
-      productCount: 5,
-      stockCount: 4,
-    },
-  ];
+  const storeLocations = await getStoreLocations();
+
+  const locations: Location[] =
+    storeLocations?.map((location) => ({
+      id: location.id,
+      inventories: [],
+      name: location.name,
+      productCount: 0,
+      stockCount: 0,
+    })) || [];
 
   return (
     <main className="flex min-h-screen flex-col items-center overflow-hidden px-3">
@@ -103,7 +74,9 @@ export default async function ManageLocationsPage() {
 
         <div className="flex flex-col gap-3">
           <div className="fade-in slide-in-from-bottom-2 flex animate-in items-center justify-between duration-500">
-            <span className="text-muted-foreground text-xs">8 مکان</span>
+            <span className="text-muted-foreground text-xs">
+              {locations.length} مکان
+            </span>
 
             <AddLocationDialog />
           </div>
