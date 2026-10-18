@@ -8,6 +8,7 @@ model Store {
     updatedAt DateTime @updatedAt()
 
     sessions  Session[]
+    suppliers Supplier[]
 }
 
 model Session {
