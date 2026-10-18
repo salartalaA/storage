@@ -1,6 +1,10 @@
 "use client";
 
-import { Plus } from "lucide-react";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { Loader2, Plus } from "lucide-react";
+import { useState } from "react";
+import { useForm } from "react-hook-form";
+import { addStoreSupplier } from "@/actions/supplier";
 import { Button } from "@/components/ui/button";
 import {
   Dialog,
@@ -13,10 +17,29 @@ import {
 } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import { type SupplierData, supplierSchema } from "@/schema/supplier";
 
 export function AddSupplierDialog() {
+  const [open, setOpen] = useState(false);
+
+  const {
+    register,
+    formState: { errors, isSubmitting },
+    handleSubmit,
+    reset,
+  } = useForm<SupplierData>({
+    resolver: zodResolver(supplierSchema),
+  });
+
+  const onsubmit = async (newSupplier: SupplierData) => {
+    await addStoreSupplier(newSupplier);
+
+    setOpen(false);
+    reset();
+  };
+
   return (
-    <Dialog>
+    <Dialog onOpenChange={setOpen} open={open}>
       <DialogTrigger
         render={
           <Button className="flex items-center gap-1 rounded-2xl text-xs">
@@ -47,7 +70,7 @@ export function AddSupplierDialog() {
           </div>
         </DialogHeader>
 
-        <div className="px-5 pb-5">
+        <form className="px-5 pb-5" onSubmit={handleSubmit(onsubmit)}>
           <div className="flex flex-col gap-3.5">
             <div className="flex flex-col gap-1.5">
               <Label
@@ -61,7 +84,14 @@ export function AddSupplierDialog() {
                 className="glass h-10 rounded-xl border-foreground/8 text-sm transition-colors placeholder:text-muted-foreground focus-visible:border-primary/40 focus-visible:ring-primary/20"
                 id="supplier-name"
                 placeholder="مثال: پگاه صنعت"
+                {...register("name")}
               />
+
+              {errors.name && (
+                <p className="font-semibold text-destructive text-xs">
+                  {errors.name.message}
+                </p>
+              )}
             </div>
 
             <div className="flex flex-col gap-1.5">
@@ -77,7 +107,14 @@ export function AddSupplierDialog() {
                 dir="ltr"
                 id="supplier-phone"
                 placeholder="مثال: 02188554477"
+                {...register("phoneNumber")}
               />
+
+              {errors.phoneNumber && (
+                <p className="font-semibold text-destructive text-xs">
+                  {errors.phoneNumber.message}
+                </p>
+              )}
             </div>
 
             <div className="flex flex-col gap-1.5">
@@ -92,7 +129,14 @@ export function AddSupplierDialog() {
                 className="glass h-10 rounded-xl border-foreground/8 text-sm transition-colors placeholder:text-muted-foreground focus-visible:border-primary/40 focus-visible:ring-primary/20"
                 id="supplier-contact"
                 placeholder="مثال: محمد رضایی"
+                {...register("contactName")}
               />
+
+              {errors.contactName && (
+                <p className="font-semibold text-destructive text-xs">
+                  {errors.contactName.message}
+                </p>
+              )}
             </div>
 
             <div className="flex flex-col gap-1.5">
@@ -102,12 +146,18 @@ export function AddSupplierDialog() {
               >
                 آدرس
               </Label>
-
               <Input
                 className="glass h-10 rounded-xl border-foreground/8 text-sm transition-colors placeholder:text-muted-foreground focus-visible:border-primary/40 focus-visible:ring-primary/20"
                 id="supplier-address"
                 placeholder="مثال: تهران، خیابان آزادی، پلاک ۱۲۰"
+                {...register("address")}
               />
+
+              {errors.address && (
+                <p className="font-semibold text-destructive text-xs">
+                  {errors.address.message}
+                </p>
+              )}
             </div>
           </div>
 
@@ -116,6 +166,8 @@ export function AddSupplierDialog() {
               render={
                 <Button
                   className="h-9 flex-1 rounded-xl border-foreground/10 text-xs"
+                  // biome-ignore lint/performance/noJsxPropsBind: No performance issue
+                  onClick={() => reset()}
                   type="button"
                   variant="outline"
                 >
@@ -124,11 +176,15 @@ export function AddSupplierDialog() {
               }
             />
 
-            <Button className="h-9 flex-1 rounded-xl text-xs" type="button">
-              افزودن
+            <Button
+              className="h-9 flex-1 rounded-xl text-xs"
+              disabled={isSubmitting}
+              type="submit"
+            >
+              {isSubmitting ? <Loader2 className="animate-spin" /> : "افزودن"}
             </Button>
           </div>
-        </div>
+        </form>
       </DialogContent>
     </Dialog>
   );
