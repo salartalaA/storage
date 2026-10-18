@@ -1,6 +1,10 @@
 "use client";
 
-import { MapPin, Plus } from "lucide-react";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { Loader2, MapPin, Plus } from "lucide-react";
+import { useState } from "react";
+import { useForm } from "react-hook-form";
+import { addStoreLocation } from "@/actions/location";
 import { Button } from "@/components/ui/button";
 import {
   Dialog,
@@ -13,10 +17,29 @@ import {
 } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import { type LocationData, locationSchema } from "@/schema/location";
 
 export function AddLocationDialog() {
+  const [open, setOpen] = useState(false);
+
+  const {
+    register,
+    formState: { errors, isSubmitting },
+    handleSubmit,
+    reset,
+  } = useForm<LocationData>({
+    resolver: zodResolver(locationSchema),
+  });
+
+  const onsubmit = async (newLocation: LocationData) => {
+    await addStoreLocation(newLocation);
+
+    setOpen(false);
+    reset();
+  };
+
   return (
-    <Dialog>
+    <Dialog onOpenChange={setOpen} open={open}>
       <DialogTrigger
         render={
           <Button className="flex items-center gap-1 rounded-2xl text-xs">
@@ -47,7 +70,7 @@ export function AddLocationDialog() {
           </div>
         </DialogHeader>
 
-        <div className="px-5 pb-5">
+        <form className="px-5 pb-5" onSubmit={handleSubmit(onsubmit)}>
           <div className="flex flex-col gap-1.5">
             <Label
               className="font-medium text-muted-foreground text-xs"
@@ -63,8 +86,16 @@ export function AddLocationDialog() {
                 className="h-10 rounded-xl border-foreground/8 pr-10 text-sm transition-colors placeholder:text-muted-foreground focus-visible:border-primary/40 focus-visible:ring-primary/20"
                 id="location-name"
                 placeholder="مثال: انبار اصلی"
+                {...register("name")}
+                autoComplete="off"
               />
             </div>
+
+            {errors.name && (
+              <p className="font-semibold text-destructive text-xs">
+                {errors.name.message}
+              </p>
+            )}
           </div>
 
           <div className="mt-5 flex gap-2">
@@ -72,6 +103,8 @@ export function AddLocationDialog() {
               render={
                 <Button
                   className="h-9 flex-1 rounded-xl border-foreground/10 text-xs"
+                  // biome-ignore lint/performance/noJsxPropsBind: No performance issue
+                  onClick={() => reset()}
                   type="button"
                   variant="outline"
                 >
@@ -80,9 +113,15 @@ export function AddLocationDialog() {
               }
             />
 
-            <Button className="h-9 flex-1 rounded-xl text-xs">افزودن</Button>
+            <Button
+              className="h-9 flex-1 rounded-xl text-xs"
+              disabled={isSubmitting}
+              type="submit"
+            >
+              {isSubmitting ? <Loader2 className="animate-spin" /> : "افزودن"}
+            </Button>
           </div>
-        </div>
+        </form>
       </DialogContent>
     </Dialog>
   );
