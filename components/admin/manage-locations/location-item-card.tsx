@@ -38,10 +38,12 @@ const itemVariants = {
 };
 
 export default function LocationItemCard({
+  locationId,
   locationName,
   productCount,
   stockCount,
 }: {
+  locationId: string;
   locationName: string;
   productCount: number;
   stockCount: number;
@@ -93,7 +95,7 @@ export default function LocationItemCard({
       >
         <ChangeLocationNameDialog />
 
-        <DeleteLocationDialog />
+        <DeleteLocationDialog locationId={locationId} name={locationName} />
       </motion.div>
     </motion.div>
   );

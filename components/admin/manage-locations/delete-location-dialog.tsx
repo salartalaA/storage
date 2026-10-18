@@ -1,6 +1,8 @@
 "use client";
 
-import { AlertTriangle, Trash2 } from "lucide-react";
+import { AlertTriangle, Loader2, Trash2 } from "lucide-react";
+import { useState } from "react";
+import { deleteStoreLocation } from "@/actions/location";
 import { Button } from "@/components/ui/button";
 import {
   Dialog,
@@ -12,9 +14,29 @@ import {
   DialogTrigger,
 } from "@/components/ui/dialog";
 
-export function DeleteLocationDialog() {
+interface DeleteLocationDialogProps {
+  locationId: string;
+  name: string;
+}
+
+export function DeleteLocationDialog({
+  locationId,
+  name,
+}: DeleteLocationDialogProps) {
+  const [open, setOpen] = useState(false);
+  const [isDeleting, setIsDeleting] = useState(false);
+
+  const handleDelete = async () => {
+    setIsDeleting(true);
+
+    await deleteStoreLocation(locationId);
+
+    setIsDeleting(false);
+    setOpen(false);
+  };
+
   return (
-    <Dialog>
+    <Dialog onOpenChange={setOpen} open={open}>
       <DialogTrigger
         render={
           <Button
@@ -57,7 +79,7 @@ export function DeleteLocationDialog() {
 
               <div className="min-w-0 flex-1">
                 <p className="truncate font-semibold text-foreground text-sm">
-                  نام مکان
+                  {name}
                 </p>
                 <p className="mt-1 text-muted-foreground text-xs">
                   این مکان برای حذف انتخاب شده است.
@@ -85,10 +107,20 @@ export function DeleteLocationDialog() {
 
             <Button
               className="h-9 flex-1 gap-2 rounded-xl text-xs"
+              disabled={isDeleting}
+              // biome-ignore lint/performance/noJsxPropsBind: No performance issue
+              onClick={handleDelete}
+              type="button"
               variant="destructive"
             >
-              <Trash2 className="size-3.5" />
-              حذف مکان
+              {isDeleting ? (
+                <Loader2 className="animate-spin" />
+              ) : (
+                <>
+                  <Trash2 className="size-3.5" />
+                  حذف مکان
+                </>
+              )}
             </Button>
           </div>
         </div>

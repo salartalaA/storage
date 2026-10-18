@@ -48,3 +48,20 @@ export async function addStoreLocation(data: LocationData) {
 
   revalidatePath("/", "layout");
 }
+
+export async function deleteStoreLocation(locationId: string) {
+  const currentStore = await getCurrentStore();
+
+  if (!currentStore) {
+    return null;
+  }
+
+  await prisma.location.delete({
+    where: {
+      id: locationId,
+      storeId: currentStore.id,
+    },
+  });
+
+  revalidatePath("/", "layout");
+}

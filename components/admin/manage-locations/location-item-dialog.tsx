@@ -54,6 +54,7 @@ export function LocationDetailDialog({ location }: { location: Location }) {
         render={
           <div className="w-full cursor-pointer text-right">
             <LocationItemCard
+              locationId={location.id}
               locationName={location.name}
               productCount={location.productCount}
               stockCount={location.stockCount}
