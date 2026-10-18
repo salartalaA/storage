@@ -93,7 +93,7 @@ export default function LocationItemCard({
         onClick={(e) => e.stopPropagation()}
         variants={itemVariants}
       >
-        <ChangeLocationNameDialog />
+        <ChangeLocationNameDialog locationId={locationId} name={locationName} />
 
         <DeleteLocationDialog locationId={locationId} name={locationName} />
       </motion.div>
