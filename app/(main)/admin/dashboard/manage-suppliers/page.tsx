@@ -3,6 +3,7 @@ import { getCurrentStore } from "@/actions/auth";
 import { getStoreSuppliers } from "@/actions/supplier";
 import AdminHeader from "@/components/admin/admin-header";
 import { AddSupplierDialog } from "@/components/admin/manage-suppliers/add-supplier-dialog";
+import NoSupplierCards from "@/components/admin/manage-suppliers/no-suppliers-card";
 import SearchSuppliers from "@/components/admin/manage-suppliers/search-suppliers";
 import { SupplierItemCard } from "@/components/admin/manage-suppliers/supplier-item-card";
 
@@ -43,17 +44,7 @@ export default async function ManageSuppliersPage() {
               />
             ))
           ) : (
-            <div className="mt-4 flex flex-col items-center justify-center gap-2 rounded-3xl border border-foreground/8 bg-card/4.5 p-3 py-6">
-              <p className="font-semibold text-sm">
-                {"در حال حاضر تامین‌کننده‌ای ندارید!"}
-              </p>
-
-              <p className="font-semibold text-muted-foreground text-xs">
-                {
-                  "با کلیک روی افزودن تامین‌کننده می‌توانید اطلاعات تامین‌کننده را وارد کنید."
-                }
-              </p>
-            </div>
+            <NoSupplierCards />
           )}
         </div>
       </div>

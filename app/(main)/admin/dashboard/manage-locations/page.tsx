@@ -4,6 +4,7 @@ import { getStoreLocations } from "@/actions/location";
 import AdminHeader from "@/components/admin/admin-header";
 import { AddLocationDialog } from "@/components/admin/manage-locations/add-location-dialog";
 import { LocationDetailDialog } from "@/components/admin/manage-locations/location-item-dialog";
+import NoLocationCard from "@/components/admin/manage-locations/no-locations-card";
 import SearchLocation from "@/components/admin/manage-locations/search-location";
 
 export interface LocationInventory {
@@ -81,9 +82,13 @@ export default async function ManageLocationsPage() {
             <AddLocationDialog />
           </div>
 
-          {locations.map((location) => (
-            <LocationDetailDialog key={location.id} location={location} />
-          ))}
+          {locations.length > 0 ? (
+            locations.map((location) => (
+              <LocationDetailDialog key={location.id} location={location} />
+            ))
+          ) : (
+            <NoLocationCard />
+          )}
         </div>
       </div>
     </main>
