@@ -1,6 +1,10 @@
 "use client";
 
-import { Pencil } from "lucide-react";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { Loader2, Pencil } from "lucide-react";
+import { useEffect, useState } from "react";
+import { useForm } from "react-hook-form";
+import { updateStoreSupplier } from "@/actions/supplier";
 import { Button } from "@/components/ui/button";
 import {
   Dialog,
@@ -13,22 +17,61 @@ import {
 } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import { type SupplierData, supplierSchema } from "@/schema/supplier";
 
 interface EditSupplierDialogProps {
-  address?: string;
-  contact?: string;
-  name?: string;
-  phone?: string;
+  address: string;
+  contactName: string;
+  name: string;
+  phoneNumber: string;
+  supplierId: string;
 }
 
 export function EditSupplierDialog({
-  name = "نوشیدنی کوکاکولا ایران",
-  phone = "02133445566",
-  contact = "رضا صادقی",
-  address = "البرز، شهرک صنعتی sims، خیابان ۱۲",
+  name,
+  phoneNumber,
+  address,
+  contactName,
+  supplierId,
 }: EditSupplierDialogProps) {
+  const [open, setOpen] = useState(false);
+
+  const {
+    register,
+    formState: { errors, isSubmitting },
+    handleSubmit,
+    reset,
+  } = useForm<SupplierData>({
+    defaultValues: {
+      address,
+      contactName,
+      name,
+      phoneNumber,
+    },
+    resolver: zodResolver(supplierSchema),
+  });
+
+  const onsubmit = async (updatedSupplier: SupplierData) => {
+    await updateStoreSupplier(supplierId, updatedSupplier);
+
+    setOpen(false);
+
+    reset();
+  };
+
+  useEffect(() => {
+    if (open) {
+      reset({
+        address,
+        contactName,
+        name,
+        phoneNumber,
+      });
+    }
+  }, [open, address, contactName, name, phoneNumber, reset]);
+
   return (
-    <Dialog>
+    <Dialog onOpenChange={setOpen} open={open}>
       <DialogTrigger
         render={
           <Button
@@ -62,7 +105,7 @@ export function EditSupplierDialog({
           </div>
         </DialogHeader>
 
-        <div className="px-5 pb-5">
+        <form className="px-5 pb-5" onSubmit={handleSubmit(onsubmit)}>
           <div className="flex flex-col gap-3.5">
             <div className="flex flex-col gap-1.5">
               <Label
@@ -74,10 +117,17 @@ export function EditSupplierDialog({
 
               <Input
                 className="glass h-10 rounded-xl border-foreground/8 text-sm transition-colors placeholder:text-muted-foreground focus-visible:border-primary/40 focus-visible:ring-primary/20"
-                defaultValue={name}
                 id="supplier-name"
                 placeholder="مثال: پگاه صنعت"
+                {...register("name")}
+                autoComplete="off"
               />
+
+              {errors.name && (
+                <p className="font-semibold text-destructive text-xs">
+                  {errors.name.message}
+                </p>
+              )}
             </div>
 
             <div className="flex flex-col gap-1.5">
@@ -90,11 +140,18 @@ export function EditSupplierDialog({
 
               <Input
                 className="glass h-10 rounded-xl border-foreground/8 text-left text-sm transition-colors placeholder:text-muted-foreground focus-visible:border-primary/40 focus-visible:ring-primary/20"
-                defaultValue={phone}
                 dir="ltr"
                 id="supplier-phone"
                 placeholder="مثال: 02188554477"
+                {...register("phoneNumber")}
+                autoComplete="off"
               />
+
+              {errors.phoneNumber && (
+                <p className="font-semibold text-destructive text-xs">
+                  {errors.phoneNumber.message}
+                </p>
+              )}
             </div>
 
             <div className="flex flex-col gap-1.5">
@@ -107,10 +164,17 @@ export function EditSupplierDialog({
 
               <Input
                 className="glass h-10 rounded-xl border-foreground/8 text-sm transition-colors placeholder:text-muted-foreground focus-visible:border-primary/40 focus-visible:ring-primary/20"
-                defaultValue={contact}
                 id="supplier-contact"
                 placeholder="مثال: محمد رضایی"
+                {...register("contactName")}
+                autoComplete="off"
               />
+
+              {errors.contactName && (
+                <p className="font-semibold text-destructive text-xs">
+                  {errors.contactName.message}
+                </p>
+              )}
             </div>
 
             <div className="flex flex-col gap-1.5">
@@ -123,10 +187,17 @@ export function EditSupplierDialog({
 
               <Input
                 className="glass h-10 rounded-xl border-foreground/8 text-sm transition-colors placeholder:text-muted-foreground focus-visible:border-primary/40 focus-visible:ring-primary/20"
-                defaultValue={address}
                 id="supplier-address"
                 placeholder="مثال: تهران، خیابان آزادی، پلاک ۱۲۰"
+                {...register("address")}
+                autoComplete="off"
               />
+
+              {errors.address && (
+                <p className="font-semibold text-destructive text-xs">
+                  {errors.address.message}
+                </p>
+              )}
             </div>
           </div>
 
@@ -135,6 +206,8 @@ export function EditSupplierDialog({
               render={
                 <Button
                   className="h-9 flex-1 rounded-xl border-foreground/10 text-xs"
+                  // biome-ignore lint/performance/noJsxPropsBind: No performance issue
+                  onClick={() => reset()}
                   type="button"
                   variant="outline"
                 >
@@ -143,11 +216,19 @@ export function EditSupplierDialog({
               }
             />
 
-            <Button className="h-9 flex-1 rounded-xl text-xs" type="button">
-              ذخیره تغییرات
+            <Button
+              className="h-9 flex-1 rounded-xl text-xs"
+              disabled={isSubmitting}
+              type="submit"
+            >
+              {isSubmitting ? (
+                <Loader2 className="animate-spin" />
+              ) : (
+                "ذخیره تغییرات"
+              )}
             </Button>
           </div>
-        </div>
+        </form>
       </DialogContent>
     </Dialog>
   );

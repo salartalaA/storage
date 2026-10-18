@@ -51,3 +51,76 @@ export async function addStoreSupplier(data: SupplierData) {
 
   revalidatePath("/", "layout");
 }
+
+export async function deleteStoreSupplier(supplierId: string) {
+  const currentStore = await getCurrentStore();
+
+  if (!currentStore) {
+    return null;
+  }
+
+  const existingSupplier = await prisma.supplier.findUnique({
+    where: {
+      id: supplierId,
+      storeId: currentStore.id,
+    },
+  });
+
+  if (!existingSupplier) {
+    return null;
+  }
+
+  await prisma.supplier.delete({
+    where: {
+      id: supplierId,
+      storeId: currentStore.id,
+    },
+  });
+
+  revalidatePath("/", "layout");
+}
+
+export async function updateStoreSupplier(
+  supplierId: string,
+  data: SupplierData
+) {
+  const currentStore = await getCurrentStore();
+
+  if (!currentStore) {
+    return null;
+  }
+
+  const updatedSafeSupplier = supplierSchema.safeParse(data);
+
+  if (!updatedSafeSupplier.success) {
+    return null;
+  }
+
+  const updatedSupplier = updatedSafeSupplier.data;
+
+  const existingSupplier = await prisma.supplier.findUnique({
+    where: {
+      id: supplierId,
+      storeId: currentStore.id,
+    },
+  });
+
+  if (!existingSupplier) {
+    return null;
+  }
+
+  await prisma.supplier.update({
+    data: {
+      address: updatedSupplier.address,
+      contactName: updatedSupplier.contactName,
+      name: updatedSupplier.name,
+      phoneNumber: updatedSupplier.phoneNumber,
+    },
+    where: {
+      id: supplierId,
+      storeId: currentStore.id,
+    },
+  });
+
+  revalidatePath("/", "layout");
+}

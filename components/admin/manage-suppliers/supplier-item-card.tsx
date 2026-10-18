@@ -40,9 +40,9 @@ const itemVariants = {
 interface SupplierInfo {
   address: string;
   contactName: string;
-  isActive: boolean;
   name: string;
   phoneNumber: string;
+  supplierId: string;
 }
 
 export function SupplierItemCard({
@@ -50,6 +50,7 @@ export function SupplierItemCard({
   phoneNumber,
   address,
   contactName,
+  supplierId,
 }: SupplierInfo) {
   return (
     <motion.div
@@ -105,9 +106,19 @@ export function SupplierItemCard({
         onClick={(e) => e.stopPropagation()}
         variants={itemVariants}
       >
-        <EditSupplierDialog />
+        <EditSupplierDialog
+          address={address}
+          contactName={contactName}
+          name={name}
+          phoneNumber={phoneNumber}
+          supplierId={supplierId}
+        />
 
-        <DeleteSupplierDialog />
+        <DeleteSupplierDialog
+          name={name}
+          phoneNumber={phoneNumber}
+          supplierId={supplierId}
+        />
       </motion.div>
     </motion.div>
   );

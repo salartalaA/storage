@@ -1,6 +1,8 @@
 "use client";
 
-import { AlertTriangle, Trash2 } from "lucide-react";
+import { AlertTriangle, Loader2, Trash2 } from "lucide-react";
+import { useState } from "react";
+import { deleteStoreSupplier } from "@/actions/supplier";
 import { Button } from "@/components/ui/button";
 import {
   Dialog,
@@ -13,16 +15,30 @@ import {
 } from "@/components/ui/dialog";
 
 interface DeleteSupplierDialogProps {
-  name?: string;
-  phone?: string;
+  name: string;
+  phoneNumber: string;
+  supplierId: string;
 }
 
 export function DeleteSupplierDialog({
-  name = "نوشیدنی کوکاکولا ایران",
-  phone = "02133445566",
+  name,
+  phoneNumber,
+  supplierId,
 }: DeleteSupplierDialogProps) {
+  const [open, setOpen] = useState(false);
+  const [isDeleting, setIsDeleting] = useState(false);
+
+  const handleDelete = async () => {
+    setIsDeleting(true);
+
+    await deleteStoreSupplier(supplierId);
+
+    setIsDeleting(false);
+    setOpen(false);
+  };
+
   return (
-    <Dialog>
+    <Dialog onOpenChange={setOpen} open={open}>
       <DialogTrigger
         render={
           <Button
@@ -66,7 +82,7 @@ export function DeleteSupplierDialog({
               </span>
 
               <span className="font-mono text-muted-foreground text-xs">
-                {phone}
+                {phoneNumber}
               </span>
             </div>
           </div>
@@ -91,10 +107,17 @@ export function DeleteSupplierDialog({
 
           <Button
             className="h-9.5 flex-1 rounded-xl px-4 text-xs"
+            disabled={isDeleting}
+            // biome-ignore lint/performance/noJsxPropsBind: No performance issue
+            onClick={handleDelete}
             type="button"
             variant="destructive"
           >
-            حذف تامین‌کننده
+            {isDeleting ? (
+              <Loader2 className="animate-spin" />
+            ) : (
+              "حذف تامین‌کننده"
+            )}
           </Button>
         </div>
       </DialogContent>

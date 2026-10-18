@@ -36,10 +36,10 @@ export default async function ManageSuppliersPage() {
               <SupplierItemCard
                 address={supplierInfo.address}
                 contactName={supplierInfo.contactName}
-                isActive={supplierInfo.isActive}
                 key={supplierInfo.id}
                 name={supplierInfo.name}
                 phoneNumber={supplierInfo.phoneNumber}
+                supplierId={supplierInfo.id}
               />
             ))
           ) : (
