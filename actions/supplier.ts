@@ -24,6 +24,27 @@ export async function getStoreSuppliers() {
   return currentStoreSuppliers;
 }
 
+export async function getStoreSupplierOptions() {
+  const currentStore = await getCurrentStore();
+
+  if (!currentStore) {
+    return [];
+  }
+
+  return prisma.supplier.findMany({
+    orderBy: {
+      name: "asc",
+    },
+    select: {
+      id: true,
+      name: true,
+    },
+    where: {
+      storeId: currentStore.id,
+    },
+  });
+}
+
 export async function addStoreSupplier(data: SupplierData) {
   const currentStore = await getCurrentStore();
 
