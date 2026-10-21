@@ -7,6 +7,7 @@ import {
   TriangleAlert,
 } from "lucide-react";
 import { redirect } from "next/navigation";
+import { getStoreAuditLogs } from "@/actions/audit";
 import { getCurrentStore } from "@/actions/auth";
 import AdminHeader from "@/components/admin/admin-header";
 import { AnimatedStatCard } from "@/components/admin/animated-stat-card";
@@ -71,6 +72,8 @@ export default async function Dashboard() {
     return redirect("/auth/login");
   }
 
+  const recentActivities = await getStoreAuditLogs();
+
   return (
     <main className="relative flex min-h-screen flex-col items-center overflow-hidden px-3">
       <div className="relative z-10 my-6 flex w-full max-w-sm flex-col gap-y-4">
@@ -108,7 +111,7 @@ export default async function Dashboard() {
 
         <ExpiringProducts />
 
-        <RecentActivities />
+        <RecentActivities activities={recentActivities} />
       </div>
     </main>
   );

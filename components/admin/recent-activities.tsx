@@ -5,62 +5,84 @@ import {
   CircleArrowUp,
   History,
   type LucideIcon,
+  PackagePlus,
+  Power,
+  PowerOff,
   SlidersHorizontal,
   Trash2,
 } from "lucide-react";
 import { motion } from "motion/react";
+import { formatRelativeTime } from "@/lib/date";
 
-interface Activity {
-  amount: string;
-  color: "success" | "destructive" | "normal";
-  icon: LucideIcon;
-  name: string;
-  time: string;
-  type: string;
+export interface RecentActivityItem {
+  action: string;
+  createdAt: Date;
+  details: string | null;
+  id: string;
+  productTitle: string;
+  reason: string;
 }
 
-const activities: Activity[] = [
-  {
-    amount: "۵۰ عدد",
-    color: "success",
-    icon: CircleArrowUp,
-    name: "شیر کاله",
-    time: "۱۰ دقیقه پیش",
-    type: "افزایش موجودی",
-  },
-  {
-    amount: "۲۳ عدد",
+type ActivityColor = "success" | "destructive" | "normal";
+
+interface ActivityConfig {
+  amountFallback: string;
+  color: ActivityColor;
+  icon: LucideIcon;
+  label: string;
+}
+
+const activityConfig: Record<string, ActivityConfig> = {
+  INVENTORY_DECREASE: {
+    amountFallback: "کاهش موجودی",
     color: "normal",
     icon: CircleArrowDown,
-    name: "چیپس مزمز",
-    time: "۳۵ دقیقه پیش",
-    type: "کاهش موجودی",
+    label: "کاهش موجودی",
   },
-  {
-    amount: "۶ عدد",
-    color: "destructive",
-    icon: Trash2,
-    name: "ماست پگاه",
-    time: "۱ ساعت پیش",
-    type: "ثبت دورریز",
-  },
-  {
-    amount: "۱۲ عدد",
-    color: "normal",
-    icon: SlidersHorizontal,
-    name: "آب معدنی",
-    time: "۲ ساعت پیش",
-    type: "اصلاح موجودی",
-  },
-  {
-    amount: "۸۰ عدد",
+  INVENTORY_INCREASE: {
+    amountFallback: "افزایش موجودی",
     color: "success",
     icon: CircleArrowUp,
-    name: "بسکویت ساقه طلایی",
-    time: "۳ ساعت پیش",
-    type: "افزایش موجودی",
+    label: "افزایش موجودی",
   },
-];
+  PRODUCT_CREATE: {
+    amountFallback: "ثبت محصول",
+    color: "success",
+    icon: PackagePlus,
+    label: "افزودن محصول",
+  },
+  PRODUCT_DELETE: {
+    amountFallback: "حذف محصول",
+    color: "destructive",
+    icon: Trash2,
+    label: "حذف محصول",
+  },
+  PRODUCT_DISABLE: {
+    amountFallback: "غیرفعال شد",
+    color: "destructive",
+    icon: PowerOff,
+    label: "غیرفعال‌سازی محصول",
+  },
+  PRODUCT_ENABLE: {
+    amountFallback: "فعال شد",
+    color: "success",
+    icon: Power,
+    label: "فعال‌سازی محصول",
+  },
+  PRODUCT_UPDATE: {
+    amountFallback: "ویرایش مشخصات",
+    color: "normal",
+    icon: SlidersHorizontal,
+    label: "ویرایش محصول",
+  },
+};
+
+const fallbackConfig: ActivityConfig = {
+  amountFallback: "تغییر ثبت شد",
+  color: "normal",
+  icon: SlidersHorizontal,
+  label: "فعالیت",
+};
 
 const colorClasses = {
   destructive: {
@@ -80,7 +102,11 @@ const colorClasses = {
   },
 } as const;
 
-export default function RecentActivities() {
+export default function RecentActivities({
+  activities,
+}: {
+  activities: RecentActivityItem[];
+}) {
   return (
     <motion.div
       className="group relative overflow-hidden rounded-3xl border border-foreground/8 bg-card/4.5 p-5 shadow-[0_8px_40px_rgba(0,0,0,0.35)] backdrop-blur-xs transition-colors duration-300 hover:border-foreground/12 hover:bg-card/6.5 hover:shadow-[0_12px_45px_rgba(0,0,0,0.42)] sm:backdrop-blur-[18px]"
@@ -122,11 +148,13 @@ export default function RecentActivities() {
             </motion.div>
 
             <h3 className="font-semibold text-foreground">
-              {"فعالیت‌های احیر"}
+              {"فعالیت‌های اخیر"}
             </h3>
           </div>
 
-          <span className="text-muted-foreground text-xs">{"امروز"}</span>
+          <span className="text-muted-foreground text-xs">
+            {"آخرین تغییرات"}
+          </span>
         </motion.div>
 
         {/* Timeline */}
@@ -140,16 +168,27 @@ export default function RecentActivities() {
             whileInView={{ scaleY: 1 }}
           />
 
+          {activities.length === 0 && (
+            <div className="relative z-10 rounded-2xl border border-foreground/7 border-dashed bg-foreground/2.5 px-4 py-8 text-center">
+              <History className="mx-auto size-5 text-muted-foreground" />
+
+              <p className="mt-2 text-muted-foreground text-xs">
+                هنوز فعالیتی ثبت نشده است.
+              </p>
+            </div>
+          )}
+
           <div className="space-y-4">
             {activities.map((activity, index) => {
-              const Icon = activity.icon;
-              const colors = colorClasses[activity.color];
+              const config = activityConfig[activity.action] ?? fallbackConfig;
+              const Icon = config.icon;
+              const colors = colorClasses[config.color];
 
               return (
                 <motion.div
                   className="relative flex items-start gap-3"
                   initial={{ opacity: 0, x: -15 }}
-                  key={`${activity.name}-${activity.type}`}
+                  key={activity.id}
                   transition={{
                     delay: 0.2 + index * 0.08,
                     duration: 0.45,
@@ -178,30 +217,40 @@ export default function RecentActivities() {
                   <div className="min-w-0 flex-1 pt-1">
                     <div className="flex items-center justify-between gap-2">
                       <p className="truncate font-medium text-sm">
-                        {activity.name}
+                        {activity.productTitle}
                       </p>
 
                       <motion.span
                         className={`shrink-0 font-semibold text-xs ${colors.text}`}
                         whileHover={{ scale: 1.05 }}
                       >
-                        {activity.amount}
+                        {activity.details || config.amountFallback}
                       </motion.span>
                     </div>
 
                     <div className="mt-0.5 flex items-center gap-2">
                       <span className={`font-medium text-xs ${colors.text}`}>
-                        {activity.type}
+                        {config.label}
                       </span>
 
                       <span className="text-muted-foreground/40 text-xs">
                         •
                       </span>
 
-                      <span className="text-muted-foreground text-xs">
-                        {activity.time}
+                      <span
+                        className="text-muted-foreground text-xs"
+                        suppressHydrationWarning
+                      >
+                        {formatRelativeTime(activity.createdAt)}
                       </span>
                     </div>
+
+                    <p
+                      className="mt-0.5 truncate text-[10px] text-muted-foreground"
+                      title={activity.reason}
+                    >
+                      دلیل: {activity.reason}
+                    </p>
                   </div>
                 </motion.div>
               );
