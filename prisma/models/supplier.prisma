@@ -1,14 +1,16 @@
 model Supplier {
-    id          String @id @default(cuid())
-    name        String
-    phoneNumber String
-    contactName String
-    address     String
+  id          String @id @default(cuid())
+  name        String
+  phoneNumber String
+  contactName String
+  address     String
 
-    storeId String
+  storeId String
 
-    store Store @relation(fields: [storeId], references: [id], onDelete: Cascade)
+  store Store @relation(fields: [storeId], references: [id], onDelete: Cascade)
 
-    createdAt DateTime @default(now())
-    updatedAt DateTime @updatedAt
+  products Product[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 }

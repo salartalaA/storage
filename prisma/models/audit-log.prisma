@@ -1,0 +1,16 @@
+model AuditLog {
+  id String @id @default(cuid())
+
+  action       String
+  productId    String?
+  productTitle String
+  reason       String
+  details      String?
+
+  storeId String
+  store   Store  @relation(fields: [storeId], references: [id], onDelete: Cascade)
+
+  createdAt DateTime @default(now())
+
+  @@index([storeId, createdAt])
+}

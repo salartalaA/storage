@@ -1,0 +1,46 @@
+model Product {
+  id       String  @id @default(cuid())
+  title    String
+  barcode  String
+  category String
+  image    String?
+  unit     String  @default("بسته")
+  isActive Boolean @default(true)
+
+  storeId String
+  store   Store  @relation(fields: [storeId], references: [id], onDelete: Cascade)
+
+  supplierId String?
+  supplier   Supplier? @relation(fields: [supplierId], references: [id], onDelete: SetNull)
+
+  inventories Inventory[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@unique([storeId, barcode])
+  @@index([supplierId])
+}
+
+model Inventory {
+  id String @id @default(cuid())
+
+  quantity  Int     @default(0)
+  unitPrice Int     @default(0)
+  isActive  Boolean @default(true)
+
+  productionDate DateTime?
+  expirationDate DateTime?
+
+  productId String
+  product   Product @relation(fields: [productId], references: [id], onDelete: Cascade)
+
+  locationId String
+  location   Location @relation(fields: [locationId], references: [id], onDelete: Cascade)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([productId])
+  @@index([locationId])
+}
