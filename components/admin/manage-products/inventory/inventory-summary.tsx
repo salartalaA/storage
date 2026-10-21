@@ -1,5 +1,5 @@
 import { cn } from "cn";
-import { MapPin } from "lucide-react";
+import { MapPin, Package } from "lucide-react";
 import { motion } from "motion/react";
 import Image from "next/image";
 import type {
@@ -45,19 +45,23 @@ export default function InventorySummary({
         className={cn(
           "rounded-2xl border p-3",
           currentModeLabel === "increase" && "border-success/10 bg-success/4",
-          currentModeLabel === "decrease" && "border-primary/10 bg-primary/4",
-          currentModeLabel === "disable" &&
-            "border-destructive/10 bg-destructive/4"
+          currentModeLabel === "decrease" && "border-primary/10 bg-primary/4"
         )}
       >
         <div className="flex items-center gap-3">
-          <Image
-            alt={item.title}
-            className="size-12 rounded-xl object-cover"
-            height={48}
-            src={item.image}
-            width={48}
-          />
+          {item.image ? (
+            <Image
+              alt={item.title}
+              className="size-12 rounded-xl object-cover"
+              height={48}
+              src={item.image}
+              width={48}
+            />
+          ) : (
+            <span className="flex size-12 shrink-0 items-center justify-center rounded-xl border border-primary/10 bg-primary/8 text-primary">
+              <Package className="size-5" />
+            </span>
+          )}
 
           <div className="min-w-0">
             <p className="truncate font-semibold text-sm">{item.title}</p>
@@ -91,7 +95,12 @@ export default function InventorySummary({
           <span className="text-[10px] text-muted-foreground">
             {"موجودی فعلی"}
           </span>
-          <p className="mt-1 font-bold text-sm">{selected?.quantity}</p>
+          <p className="mt-1 font-bold text-sm">
+            {selected?.quantity.toLocaleString("fa-IR")}
+            <span className="mr-1 font-normal text-[10px] text-muted-foreground">
+              {item.unit}
+            </span>
+          </p>
         </div>
 
         <div className="border-foreground/8 border-x">
@@ -102,11 +111,14 @@ export default function InventorySummary({
             className={cn(
               "mt-1 font-bold text-sm",
               currentModeLabel === "increase" && "text-success",
-              currentModeLabel === "decrease" && "text-primary",
-              currentModeLabel === "disable" && "text-destructive"
+              currentModeLabel === "decrease" && "text-primary"
             )}
           >
-            {amount} {currentModeLabel === "increase" ? "+" : "-"}
+            {amount.toLocaleString("fa-IR")}{" "}
+            {currentModeLabel === "increase" ? "+" : "-"}
+            <span className="mr-1 font-normal text-[10px] text-muted-foreground">
+              {item.unit}
+            </span>
           </p>
         </div>
 
@@ -118,11 +130,13 @@ export default function InventorySummary({
             className={cn(
               "mt-1 font-bold text-sm",
               currentModeLabel === "increase" && "text-success",
-              currentModeLabel === "decrease" && "text-primary",
-              currentModeLabel === "disable" && "text-destructive"
+              currentModeLabel === "decrease" && "text-primary"
             )}
           >
-            {newQuantity}
+            {newQuantity?.toLocaleString("fa-IR")}
+            <span className="mr-1 font-normal text-[10px] text-muted-foreground">
+              {item.unit}
+            </span>
           </p>
         </div>
       </div>
@@ -133,7 +147,7 @@ export default function InventorySummary({
             <span className="text-xs">{"تاریخ تولید:"}</span>
 
             <span className="text-muted-foreground text-xs">
-              {item.lastUpdated}
+              {selected?.producedAt ?? "—"}
             </span>
           </div>
 
@@ -141,7 +155,7 @@ export default function InventorySummary({
             <span className="text-xs">{"تاریخ انقضا:"}</span>
 
             <span className="text-muted-foreground text-xs">
-              {item.lastUpdated}
+              {selected?.expiredAt ?? "—"}
             </span>
           </div>
         </div>

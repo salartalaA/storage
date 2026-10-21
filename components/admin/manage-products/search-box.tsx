@@ -4,7 +4,13 @@ import { Search } from "lucide-react";
 import { motion } from "motion/react";
 import { Input } from "@/components/ui/input";
 
-export default function SearchBox() {
+export default function SearchBox({
+  value,
+  onChange,
+}: {
+  value: string;
+  onChange: (value: string) => void;
+}) {
   return (
     <motion.div
       className="group relative"
@@ -28,8 +34,12 @@ export default function SearchBox() {
       <Search className="pointer-events-none absolute top-1/2 right-3.5 z-10 size-4 -translate-y-1/2 text-muted-foreground transition-colors duration-200 group-focus-within:text-primary" />
 
       <Input
+        aria-label="جستجوی محصول"
         className="h-11 rounded-2xl border-foreground/8 bg-card/4.5 pr-10 text-sm shadow-[0_8px_30px_rgba(0,0,0,0.25)] backdrop-blur-[18px] transition-all duration-300 placeholder:text-muted-foreground/80 hover:border-foreground/12 hover:bg-card/6 focus-visible:border-primary/40 focus-visible:bg-card/8 focus-visible:ring-4 focus-visible:ring-primary/10"
+        // biome-ignore lint/performance/noJsxPropsBind: No performance issue
+        onChange={(event) => onChange(event.target.value)}
         placeholder="جستجوی نام محصول یا بارکد..."
+        value={value}
       />
     </motion.div>
   );

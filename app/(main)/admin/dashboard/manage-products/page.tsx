@@ -1,10 +1,23 @@
 import { redirect } from "next/navigation";
 import { getCurrentStore } from "@/actions/auth";
+import { getStoreLocationOptions } from "@/actions/location";
+import { getStoreProducts } from "@/actions/product";
+import { getStoreSupplierOptions } from "@/actions/supplier";
 import AdminHeader from "@/components/admin/admin-header";
-import ProductFilters from "@/components/admin/manage-products/product-filter";
-import SearchBox from "@/components/admin/manage-products/search-box";
-import type { StockItem } from "@/components/admin/manage-products/stock-item-card";
-import { StockItemDialog } from "@/components/admin/manage-products/stock-item-dialog";
+import { ProductsExplorer } from "@/components/admin/manage-products/products-explorer";
+import type {
+  StockItem,
+  StockItemInventory,
+} from "@/components/admin/manage-products/stock-item-card";
+import { formatPersianDate } from "@/lib/date";
+import {
+  getPriorityInventory,
+  sortInventoriesByPriority,
+} from "@/lib/inventory";
+
+function getProductStatus(totalQuantity: number): StockItem["status"] {
+  return totalQuantity > 0 ? "IN_STOCK" : "OUT_OF_STOCK";
+}
 
 export default async function ManageProductsPage() {
   const currentStore = await getCurrentStore();
@@ -13,67 +26,79 @@ export default async function ManageProductsPage() {
     return redirect("/auth/login");
   }
 
-  const stockItems: StockItem[] = [
-    {
-      barcode: "6266789012346",
-      category: "مواد غذایی",
-      id: "item-101",
-      image: "/golestan-rice.jpg",
-      lastUpdated: "۱۴۰۵/۰۶/۲۴",
-      location: "انبار اصلی",
-      quantity: 32,
-      status: "IN_STOCK",
-      title: "برنج طارم گلستان",
-    },
-    {
-      barcode: "6261112223334",
-      category: "لبنیات",
-      id: "item-102",
-      image: "/lighvan-cheese.png",
-      lastUpdated: "۱۴۰۵/۰۶/۲۴",
-      location: "سردخانه",
-      quantity: 20,
-      status: "LOW_STOCK",
-      title: "پنیر سفید لیقوان",
-    },
-    {
-      barcode: "6261234567891",
-      category: "لبنیات",
-      id: "item-103",
-      image: "/pegah-milk.png",
-      lastUpdated: "۱۴۰۵/۰۶/۲۳",
-      location: "انبار اصلی",
-      quantity: 32,
-      status: "IN_STOCK",
-      title: "شیر کم‌چرب پگاه",
-    },
-    {
-      barcode: "6262345678902",
-      category: "لبنیات",
-      id: "item-104",
-      image: "/yogurt-seven.jpg",
-      lastUpdated: "۱۴۰۵/۰۶/۲۳",
-      location: "سردخانه",
-      quantity: 32,
-      status: "IN_STOCK",
-      title: "ماست کاله",
-    },
-  ];
+  const storeProducts = await getStoreProducts();
+  const locationOptions = await getStoreLocationOptions();
+  const supplierOptions = await getStoreSupplierOptions();
+
+  const stockItems: StockItem[] = (storeProducts ?? []).map((product) => {
+    const inventories = sortInventoriesByPriority(
+      product.inventories.map(
+        (inventory): StockItemInventory => ({
+          barcode: product.barcode,
+          expirationDate: formatPersianDate(inventory.expirationDate),
+          expirationDateTimestamp: inventory.expirationDate?.getTime() ?? null,
+          id: inventory.id,
+          isActive: inventory.isActive,
+          location: inventory.location.name,
+          locationId: inventory.locationId,
+          productionDate: formatPersianDate(inventory.productionDate),
+          quantity: inventory.quantity,
+          unitPrice: inventory.unitPrice.toLocaleString("fa-IR"),
+        })
+      )
+    );
+
+    const totalQuantity = inventories
+      .filter((inventory) => inventory.isActive)
+      .reduce((total, inventory) => total + inventory.quantity, 0);
+
+    const timestamps = [
+      product.updatedAt,
+      ...product.inventories.map((inventory) => inventory.updatedAt),
+    ];
+
+    const lastUpdated = new Date(
+      Math.max(...timestamps.map((timestamp) => timestamp.getTime()))
+    );
+
+    const activeInventories = inventories.filter(
+      (inventory) => inventory.isActive
+    );
+
+    const priorityInventory = getPriorityInventory(inventories);
+
+    return {
+      barcode: product.barcode,
+      category: product.category,
+      id: product.id,
+      image: product.image,
+      inventories,
+      isProductActive: product.isActive,
+      lastUpdated: formatPersianDate(lastUpdated),
+      location:
+        priorityInventory?.location ??
+        activeInventories.at(0)?.location ??
+        inventories.at(0)?.location ??
+        "بدون مکان",
+      quantity: totalQuantity,
+      status: getProductStatus(totalQuantity),
+      supplierId: product.supplier?.id ?? null,
+      supplierName: product.supplier?.name ?? "بدون تامین‌کننده",
+      title: product.title,
+      unit: product.unit,
+    };
+  });
 
   return (
     <main className="flex min-h-screen flex-col items-center overflow-hidden px-3">
       <div className="my-6 flex w-full max-w-sm flex-col gap-y-4">
         <AdminHeader />
 
-        <SearchBox />
-
-        <ProductFilters />
-
-        <div className="flex flex-col gap-3">
-          {stockItems.map((item) => (
-            <StockItemDialog item={item} key={item.id} />
-          ))}
-        </div>
+        <ProductsExplorer
+          items={stockItems}
+          locations={locationOptions}
+          suppliers={supplierOptions}
+        />
       </div>
     </main>
   );

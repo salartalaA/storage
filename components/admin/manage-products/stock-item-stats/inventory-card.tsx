@@ -1,15 +1,20 @@
-import { CalendarDays, MapPin, Tag } from "lucide-react";
+import { CalendarDays, MapPin, Star, Tag } from "lucide-react";
 
 interface InventoryCardProps {
-  getQuantityStyle: (quantity: number) => string;
+  getQuantityStyle: (inventory: InventoryCardProps["inventory"]) => string;
   inventory: {
+    barcode: string;
+    expirationDate: string;
+    expirationDateTimestamp: number | null;
     id: string;
+    isActive: boolean;
     location: string;
+    locationId: string;
+    productionDate: string;
     quantity: number;
     unitPrice: string;
-    productionDate: string;
-    expirationDate: string;
   };
+  isPriority?: boolean;
   itemUnit?: string;
   status: {
     className: string;
@@ -19,6 +24,7 @@ interface InventoryCardProps {
 
 export function InventoryCard({
   inventory,
+  isPriority = false,
   itemUnit,
   status,
   getQuantityStyle,
@@ -41,20 +47,27 @@ export function InventoryCard({
           >
             {status.label}
           </span>
+
+          {isPriority && (
+            <span className="inline-flex items-center gap-1 rounded-md border border-warning/20 bg-warning/8 px-1.5 py-0.5 font-medium text-[9px] text-warning">
+              <Star className="size-2.5 fill-current" />
+              اولویت
+            </span>
+          )}
         </div>
 
         <div className="flex shrink-0 items-center gap-2">
           <div className="flex items-center gap-1">
             <span
               className={`font-bold text-lg tabular-nums ${getQuantityStyle(
-                inventory.quantity
+                inventory
               )}`}
             >
-              {inventory.quantity}
+              {inventory.quantity.toLocaleString("fa-IR")}
             </span>
 
             <span className="text-muted-foreground text-xs">
-              {itemUnit ?? "عدد"}
+              {itemUnit ?? "واحد"}
             </span>
           </div>
         </div>

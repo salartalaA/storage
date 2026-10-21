@@ -1,9 +1,14 @@
 "use client";
 
+import { Package, Truck } from "lucide-react";
 import Image from "next/image";
+import { useState } from "react";
+import { DeleteProductDialog } from "@/components/admin/manage-products/delete-product-dialog";
+import { EditProductDialog } from "@/components/admin/manage-products/edit-product-dialog";
 import {
   type StockItem,
   StockItemCard,
+  type StockItemInventory,
 } from "@/components/admin/manage-products/stock-item-card";
 import { InventoryCard } from "@/components/admin/manage-products/stock-item-stats/inventory-card";
 import StockItemCards from "@/components/admin/manage-products/stock-item-stats/stock-item-cards";
@@ -17,42 +22,9 @@ import {
 } from "@/components/ui/dialog";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Separator } from "@/components/ui/separator";
+import { getPriorityInventory } from "@/lib/inventory";
 
-export interface InventoryRecord {
-  expirationDate: string;
-  id: string;
-  location: string;
-  productionDate: string;
-  quantity: number;
-  unitPrice: string;
-}
-
-const inventories: InventoryRecord[] = [
-  {
-    expirationDate: "۱۴۰۷/۰۳/۰۱",
-    id: "inventory-1",
-    location: "انبار اصلی",
-    productionDate: "۱۴۰۵/۰۳/۰۱",
-    quantity: 20,
-    unitPrice: "۸۵۰٬۰۰۰",
-  },
-  {
-    expirationDate: "۱۴۰۷/۰۴/۱۵",
-    id: "inventory-2",
-    location: "انبار پشتی",
-    productionDate: "۱۴۰۵/۰۴/۱۵",
-    quantity: 12,
-    unitPrice: "۸۲۰٬۰۰۰",
-  },
-  {
-    expirationDate: "۱۴۰۷/۰۵/۲۰",
-    id: "inventory-3",
-    location: "قفسه فروش",
-    productionDate: "۱۴۰۵/۰۵/۲۰",
-    quantity: 0,
-    unitPrice: "۸۹۰٬۰۰۰",
-  },
-];
+export type InventoryRecord = StockItemInventory;
 
 const productStatusStyles = {
   ACTIVE: {
@@ -61,38 +33,42 @@ const productStatusStyles = {
   },
   INACTIVE: {
     className: "border-foreground/8 bg-foreground/5 text-muted-foreground",
-    label: "غیرفعال",
-  },
-  LOW_STOCK: {
-    className: "border-warning/15 bg-warning/8 text-warning",
-    label: "کم موجود",
+    label: "ناموجود",
   },
 };
 
 const quantityStyles = {
   empty: "text-muted-foreground",
-  low: "text-warning",
   normal: "text-success",
 };
 
-export function StockItemDialog({ item }: { item: StockItem }) {
-  const totalQuantity = inventories.reduce(
-    (total, inventory) => total + inventory.quantity,
-    0
-  );
+export function StockItemDialog({
+  item,
+  locations,
+  suppliers,
+}: {
+  item: StockItem;
+  locations: { id: string; name: string }[];
+  suppliers: { id: string; name: string }[];
+}) {
+  const [open, setOpen] = useState(false);
 
-  const getInventoryStatus = (quantity: number) => {
-    if (quantity === 0) {
+  const { inventories } = item;
+
+  const priorityInventory = getPriorityInventory(inventories);
+
+  const getInventoryStatus = (inventory: StockItemInventory) => {
+    if (!inventory.isActive) {
       return {
         className: "border-foreground/8 bg-foreground/5 text-muted-foreground",
         label: "غیرفعال",
       };
     }
 
-    if (quantity <= 5) {
+    if (inventory.quantity === 0) {
       return {
-        className: "border-warning/15 bg-warning/8 text-warning",
-        label: "کم موجود",
+        className: "border-foreground/8 bg-foreground/5 text-muted-foreground",
+        label: "ناموجود",
       };
     }
 
@@ -103,24 +79,23 @@ export function StockItemDialog({ item }: { item: StockItem }) {
   };
 
   const getProductStatus = () => {
-    if (totalQuantity === 0) {
-      return productStatusStyles.INACTIVE;
+    if (!item.isProductActive) {
+      return {
+        className: "border-destructive/15 bg-destructive/8 text-destructive",
+        label: "غیرفعال",
+      };
     }
 
-    if (item.status === "LOW_STOCK") {
-      return productStatusStyles.LOW_STOCK;
+    if (item.status === "OUT_OF_STOCK") {
+      return productStatusStyles.INACTIVE;
     }
 
     return productStatusStyles.ACTIVE;
   };
 
-  const getQuantityStyle = (quantity: number) => {
-    if (quantity === 0) {
+  const getQuantityStyle = (inventory: StockItemInventory) => {
+    if (!inventory.isActive || inventory.quantity === 0) {
       return quantityStyles.empty;
-    }
-
-    if (quantity <= 5) {
-      return quantityStyles.low;
     }
 
     return quantityStyles.normal;
@@ -129,7 +104,7 @@ export function StockItemDialog({ item }: { item: StockItem }) {
   const productStatus = getProductStatus();
 
   return (
-    <Dialog>
+    <Dialog onOpenChange={setOpen} open={open}>
       <DialogTrigger
         nativeButton={false}
         render={
@@ -139,17 +114,23 @@ export function StockItemDialog({ item }: { item: StockItem }) {
         }
       />
 
-      <DialogContent className="w-[calc(100%-1.5rem)] max-w-sm! gap-0 overflow-hidden rounded-3xl border-foreground/10 bg-background/95 p-0 shadow-[0_20px_80px_rgba(0,0,0,0.5)] sm:w-full">
+      <DialogContent className="max-h-[90dvh] w-[calc(100%-1.5rem)] max-w-sm! gap-0 overflow-y-auto rounded-3xl border-foreground/10 bg-background/95 p-0 shadow-[0_20px_80px_rgba(0,0,0,0.5)] sm:w-full">
         <div className="pointer-events-none absolute inset-x-0 top-0 h-px bg-linear-to-r from-transparent via-foreground/12 to-transparent" />
         <DialogHeader className="space-y-0 px-5 pt-5 pb-4 text-right">
           <div className="flex items-start gap-3">
-            <Image
-              alt={item.title}
-              className="size-12 shrink-0 rounded-xl border border-foreground/8 object-cover"
-              height={48}
-              src={item.image}
-              width={48}
-            />
+            {item.image ? (
+              <Image
+                alt={item.title}
+                className="size-12 shrink-0 rounded-xl border border-foreground/8 object-cover"
+                height={48}
+                src={item.image}
+                width={48}
+              />
+            ) : (
+              <span className="flex size-12 shrink-0 items-center justify-center rounded-xl border border-primary/10 bg-primary/8 text-primary">
+                <Package className="size-5" />
+              </span>
+            )}
 
             <div className="min-w-0 flex-1">
               <div className="flex items-start justify-between gap-3">
@@ -163,13 +144,34 @@ export function StockItemDialog({ item }: { item: StockItem }) {
                     <span className="text-foreground/20">•</span>
                     <span className="font-mono">{item.barcode}</span>
                   </DialogDescription>
+
+                  <div className="mt-1 flex items-center gap-1.5 text-[10px] text-muted-foreground">
+                    <Truck className="size-3 shrink-0" />
+                    <span className="truncate">{item.supplierName}</span>
+                  </div>
                 </div>
 
-                <span
-                  className={`shrink-0 rounded-lg border px-2.5 py-1 font-medium text-xs ${productStatus.className}`}
-                >
-                  {productStatus.label}
-                </span>
+                <div className="flex shrink-0 items-center gap-1.5">
+                  <span
+                    className={`rounded-lg border px-2.5 py-1 font-medium text-xs ${productStatus.className}`}
+                  >
+                    {productStatus.label}
+                  </span>
+
+                  <EditProductDialog
+                    item={item}
+                    locations={locations}
+                    suppliers={suppliers}
+                  />
+
+                  <DeleteProductDialog
+                    barcode={item.barcode}
+                    // biome-ignore lint/performance/noJsxPropsBind: No performance issue
+                    onDeleted={() => setOpen(false)}
+                    productId={item.id}
+                    title={item.title}
+                  />
+                </div>
               </div>
             </div>
           </div>
@@ -192,28 +194,39 @@ export function StockItemDialog({ item }: { item: StockItem }) {
             </div>
 
             <span className="rounded-lg border border-foreground/7 bg-card/4.5 px-2.5 py-1 text-muted-foreground text-xs">
-              {inventories.length} {"رکورد"}
+              {inventories.length.toLocaleString("fa-IR")} {"رکورد"}
             </span>
           </div>
 
-          <ScrollArea className="h-[300px] pr-1">
-            <div className="flex flex-col gap-2.5 pl-1">
-              {inventories.map((inventory) => {
-                const status = getInventoryStatus(inventory.quantity);
+          {inventories.length > 0 ? (
+            <ScrollArea className="h-[300px] pr-1">
+              <div className="flex flex-col gap-2.5 pl-1">
+                {inventories.map((inventory) => {
+                  const status = getInventoryStatus(inventory);
 
-                return (
-                  <InventoryCard
-                    // biome-ignore lint/performance/noJsxPropsBind: No performance impact
-                    getQuantityStyle={getQuantityStyle}
-                    inventory={inventory}
-                    itemUnit={item.unit}
-                    key={inventory.id}
-                    status={status}
-                  />
-                );
-              })}
+                  return (
+                    <InventoryCard
+                      // biome-ignore lint/performance/noJsxPropsBind: No performance impact
+                      getQuantityStyle={getQuantityStyle}
+                      inventory={inventory}
+                      isPriority={inventory.id === priorityInventory?.id}
+                      itemUnit={item.unit}
+                      key={inventory.id}
+                      status={status}
+                    />
+                  );
+                })}
+              </div>
+            </ScrollArea>
+          ) : (
+            <div className="flex flex-col items-center gap-2 rounded-2xl border border-foreground/7 border-dashed bg-foreground/2.5 px-4 py-8 text-center">
+              <Package className="size-6 text-muted-foreground" />
+
+              <p className="text-muted-foreground text-xs">
+                هنوز موجودی برای این محصول در مکانی ثبت نشده است.
+              </p>
             </div>
-          </ScrollArea>
+          )}
         </section>
       </DialogContent>
     </Dialog>

@@ -1,5 +1,5 @@
 import { cn } from "cn";
-import { Check, MapPin, PackageOpen } from "lucide-react";
+import { Check, MapPin, PackageOpen, Star } from "lucide-react";
 import { motion } from "motion/react";
 import type { Dispatch, SetStateAction } from "react";
 import type {
@@ -7,16 +7,36 @@ import type {
   ModeLabel,
 } from "@/components/admin/manage-products/inventory/manage-inventory-dialog";
 
+function getSelectedButtonClassName(mode: ModeLabel) {
+  if (mode === "increase") {
+    return "border-success/25 bg-success/6";
+  }
+
+  return "border-primary/25 bg-primary/6";
+}
+
+function getCheckClassName(mode: ModeLabel) {
+  if (mode === "increase") {
+    return "bg-success text-success-foreground";
+  }
+
+  return "bg-primary text-primary-foreground";
+}
+
 export function InventorySelector({
   inventories,
+  priorityInventoryId,
   selectedInventory,
   setSelectedInventory,
   currentModeLabel,
+  itemUnit,
 }: {
   inventories: Inventory[];
+  priorityInventoryId: string | null;
   selectedInventory: string | null;
   setSelectedInventory: Dispatch<SetStateAction<string | null>>;
   currentModeLabel: ModeLabel;
+  itemUnit: string;
 }) {
   return (
     <motion.div
@@ -35,19 +55,15 @@ export function InventorySelector({
       <div className="grid grid-cols-2 gap-2">
         {inventories.map((inventory) => {
           const isSelected = selectedInventory === inventory.id;
-          const disabled = inventory.quantity === 0;
+          const isPriority = inventory.id === priorityInventoryId;
+          const disabled =
+            currentModeLabel === "decrease" && inventory.quantity === 0;
 
           return (
             <button
               className={`relative flex min-h-20 flex-col justify-between rounded-2xl border p-3 text-right transition ${
                 isSelected
-                  ? // biome-ignore lint/style/noNestedTernary: CHECK LATER
-                    currentModeLabel === "increase"
-                    ? "border-success/25 bg-success/6"
-                    : // biome-ignore lint/style/noNestedTernary: CHECK LATER
-                      currentModeLabel === "decrease"
-                      ? "border-primary/25 bg-primary/6"
-                      : "border-destructive/25 bg-destructive/6"
+                  ? getSelectedButtonClassName(currentModeLabel)
                   : "border-foreground/8 bg-card/4.5 hover:border-foreground/15"
               } ${disabled ? "cursor-not-allowed opacity-40" : ""}`}
               disabled={disabled}
@@ -64,24 +80,31 @@ export function InventorySelector({
                 <span className="truncate font-medium text-xs">
                   {inventory.location}
                 </span>
+
+                {isPriority && (
+                  <Star
+                    aria-label="در اولویت"
+                    className="size-2.5 shrink-0 fill-warning text-warning"
+                  />
+                )}
               </div>
 
               <div className="mt-2 space-y-1.5">
-                <div className="flex items-center justify-between">
+                <div className="flex items-center justify-between gap-1">
                   <span className="text-[10px] text-muted-foreground">
-                    {disabled ? "غیرفعال" : "موجود"}
+                    {inventory.isActive ? "فعال" : "غیرفعال"}
                   </span>
 
                   <span className="font-bold text-xs">
-                    {inventory.quantity}{" "}
+                    {inventory.quantity.toLocaleString("fa-IR")}{" "}
                     <span className="font-normal text-muted-foreground">
-                      {"عدد"}
+                      {itemUnit}
                     </span>
                   </span>
                 </div>
 
                 <div className="flex items-center justify-between text-[10px] text-muted-foreground">
-                  <span>{inventory.producedAt}</span>
+                  <span>انقضا: {inventory.expiredAt}</span>
                 </div>
               </div>
 
@@ -89,12 +112,7 @@ export function InventorySelector({
                 <div
                   className={cn(
                     "absolute top-2 left-2 flex size-5 items-center justify-center rounded-full",
-                    currentModeLabel === "increase"
-                      ? "bg-success text-success-foreground"
-                      : // biome-ignore lint/style/noNestedTernary: CHECK LATERZ
-                        currentModeLabel === "decrease"
-                        ? "bg-primary text-primary-foreground"
-                        : "bg-destructive text-destructive-foreground"
+                    getCheckClassName(currentModeLabel)
                   )}
                 >
                   <Check className="size-3" />

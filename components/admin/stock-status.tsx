@@ -17,9 +17,9 @@ const chartData = [
     status: "IN_STOCK",
   },
   {
-    fill: "color-mix(in oklch, var(--warning) 90%, transparent)",
+    fill: "color-mix(in oklch, var(--muted-foreground) 70%, transparent)",
     products: 12,
-    status: "LOW_STOCK",
+    status: "OUT_OF_STOCK",
   },
   {
     fill: "color-mix(in oklch, var(--destructive) 90%, transparent)",
@@ -37,9 +37,9 @@ const chartConfig = {
     color: "var(--primary)",
     label: "موجود",
   },
-  LOW_STOCK: {
-    color: "var(--warning)",
-    label: "کم موجود",
+  OUT_OF_STOCK: {
+    color: "var(--muted-foreground)",
+    label: "ناموجود",
   },
 } satisfies ChartConfig;
 

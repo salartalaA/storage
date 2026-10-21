@@ -104,7 +104,7 @@ export default function IncreaseQuantityForm({
             />
 
             <span className="pointer-events-none absolute top-1/2 left-3 -translate-y-1/2 text-[10px] text-muted-foreground">
-              {"عدد"}
+              {item.unit}
             </span>
           </div>
         </div>
@@ -139,7 +139,12 @@ export default function IncreaseQuantityForm({
           <span className="text-[10px] text-muted-foreground">
             {"موجودی فعلی"}
           </span>
-          <p className="mt-1 font-bold text-sm">{selected?.quantity}</p>
+          <p className="mt-1 font-bold text-sm">
+            {selected?.quantity.toLocaleString("fa-IR")}
+            <span className="mr-1 font-normal text-[10px] text-muted-foreground">
+              {item.unit}
+            </span>
+          </p>
         </div>
 
         <div className="border-foreground/8 border-x">
@@ -150,8 +155,7 @@ export default function IncreaseQuantityForm({
             className={cn(
               "mt-1 font-bold text-sm",
               currentModeLabel === "increase" && "text-success",
-              currentModeLabel === "decrease" && "text-primary",
-              currentModeLabel === "disable" && "text-destructive"
+              currentModeLabel === "decrease" && "text-primary"
             )}
           >
             {amount} {currentModeLabel === "increase" ? "+" : "-"}
@@ -166,11 +170,13 @@ export default function IncreaseQuantityForm({
             className={cn(
               "mt-1 font-bold text-sm",
               currentModeLabel === "increase" && "text-success",
-              currentModeLabel === "decrease" && "text-primary",
-              currentModeLabel === "disable" && "text-destructive"
+              currentModeLabel === "decrease" && "text-primary"
             )}
           >
-            {newQuantity}
+            {newQuantity?.toLocaleString("fa-IR")}
+            <span className="mr-1 font-normal text-[10px] text-muted-foreground">
+              {item.unit}
+            </span>
           </p>
         </div>
       </div>

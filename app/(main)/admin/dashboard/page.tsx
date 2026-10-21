@@ -44,7 +44,7 @@ const stats = [
     description: "نیاز به سفارش",
     icon: TriangleAlert,
     iconClass: "bg-warning/10 text-warning",
-    title: "محصولات کم موجود",
+    title: "محصولات ناموجود",
     trend: "۳",
     trendClass: "text-warning",
     trendIcon: TrendingDown,

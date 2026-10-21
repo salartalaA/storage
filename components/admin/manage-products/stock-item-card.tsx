@@ -1,21 +1,46 @@
 "use client";
 
-import { Barcode, CalendarDays, MapPin } from "lucide-react";
+import {
+  Barcode,
+  CalendarDays,
+  MapPin,
+  Package,
+  Star,
+  Truck,
+} from "lucide-react";
 import { motion, type Transition } from "motion/react";
 import Image from "next/image";
 import ActionButtons from "@/components/admin/manage-products/action-buttons";
+import { getPriorityInventory } from "@/lib/inventory";
+
+export interface StockItemInventory {
+  barcode: string;
+  expirationDate: string;
+  expirationDateTimestamp: number | null;
+  id: string;
+  isActive: boolean;
+  location: string;
+  locationId: string;
+  productionDate: string;
+  quantity: number;
+  unitPrice: string;
+}
 
 export interface StockItem {
   barcode: string;
   category: string;
   id: string;
-  image: string;
+  image: string | null;
+  inventories: StockItemInventory[];
+  isProductActive: boolean;
   lastUpdated: string;
   location: string;
   quantity: number | string;
-  status: "IN_STOCK" | "LOW_STOCK" | "OUT_OF_STOCK";
+  status: "IN_STOCK" | "OUT_OF_STOCK";
+  supplierId: string | null;
+  supplierName: string;
   title: string;
-  unit?: string;
+  unit: string;
 }
 
 const statusStyles = {
@@ -24,12 +49,6 @@ const statusStyles = {
     label: "موجود",
     quantity: "text-success",
     text: "text-success",
-  },
-  LOW_STOCK: {
-    badge: "border-warning/15 bg-warning/8 text-warning",
-    label: "کم موجود",
-    quantity: "text-warning",
-    text: "text-warning",
   },
   OUT_OF_STOCK: {
     badge: "border-foreground/8 bg-foreground/5 text-muted-foreground",
@@ -51,6 +70,8 @@ const transition: Transition = {
 
 export function StockItemCard({ item }: { item: StockItem }) {
   const status = statusStyles[item.status] ?? statusStyles.OUT_OF_STOCK;
+  const priorityInventory = getPriorityInventory(item.inventories);
+  const isPriorityLocation = priorityInventory?.location === item.location;
 
   return (
     <motion.div
@@ -77,13 +98,19 @@ export function StockItemCard({ item }: { item: StockItem }) {
               viewport={viewport}
               whileInView={{ opacity: 1, scale: 1, x: 0 }}
             >
-              <Image
-                alt={item.title}
-                className="pointer-events-none rounded-xl object-cover"
-                height={40}
-                src={item.image}
-                width={40}
-              />
+              {item.image ? (
+                <Image
+                  alt={item.title}
+                  className="pointer-events-none rounded-xl object-cover"
+                  height={40}
+                  src={item.image}
+                  width={40}
+                />
+              ) : (
+                <span className="flex size-10 shrink-0 items-center justify-center rounded-xl border border-primary/10 bg-primary/8 text-primary">
+                  <Package className="size-4" />
+                </span>
+              )}
             </motion.div>
 
             <motion.div
@@ -97,7 +124,7 @@ export function StockItemCard({ item }: { item: StockItem }) {
                 {item.title}
               </h3>
 
-              <div className="mt-1 flex items-center gap-1.5">
+              <div className="mt-1 flex flex-wrap items-center gap-1.5">
                 <motion.span
                   className="text-muted-foreground text-xs"
                   initial={{ opacity: 0, y: 8 }}
@@ -119,6 +146,18 @@ export function StockItemCard({ item }: { item: StockItem }) {
                 >
                   {status.label}
                 </motion.span>
+
+                {!item.isProductActive && (
+                  <motion.span
+                    className="rounded-lg border border-destructive/15 bg-destructive/8 px-1.5 py-0.5 font-medium text-[9px] text-destructive"
+                    initial={{ opacity: 0, scale: 0.8, x: 12 }}
+                    transition={{ ...transition, delay: 0.33 }}
+                    viewport={viewport}
+                    whileInView={{ opacity: 1, scale: 1, x: 0 }}
+                  >
+                    محصول غیرفعال
+                  </motion.span>
+                )}
               </div>
             </motion.div>
           </motion.div>
@@ -133,7 +172,9 @@ export function StockItemCard({ item }: { item: StockItem }) {
             <span
               className={`font-bold text-xl tabular-nums leading-none ${status.quantity}`}
             >
-              {item.quantity}
+              {typeof item.quantity === "number"
+                ? item.quantity.toLocaleString("fa-IR")
+                : item.quantity}
             </span>
 
             <motion.span
@@ -143,7 +184,7 @@ export function StockItemCard({ item }: { item: StockItem }) {
               viewport={viewport}
               whileInView={{ opacity: 1, y: 0 }}
             >
-              {item.unit ?? "عدد"}
+              {item.unit}
             </motion.span>
           </motion.div>
         </div>
@@ -176,27 +217,44 @@ export function StockItemCard({ item }: { item: StockItem }) {
             viewport={viewport}
             whileInView={{ opacity: 1, x: 0 }}
           >
+            <Truck className="size-3.5 shrink-0 text-muted-foreground" />
+
+            <span className="truncate text-muted-foreground text-xs">
+              {item.supplierName}
+            </span>
+          </motion.div>
+
+          <motion.div
+            className="flex min-w-0 items-center gap-1.5"
+            initial={{ opacity: 0, x: -18 }}
+            transition={{ ...transition, delay: 0.37 }}
+            viewport={viewport}
+            whileInView={{ opacity: 1, x: 0 }}
+          >
             <MapPin className="size-3.5 shrink-0 text-muted-foreground" />
 
             <span className="truncate text-muted-foreground text-xs">
               {item.location}
             </span>
+
+            {isPriorityLocation && (
+              <span className="inline-flex shrink-0 items-center gap-0.5 rounded border border-warning/20 bg-warning/8 px-1 py-0.5 font-medium text-[8px] text-warning">
+                <Star className="size-2 fill-current" />
+                اولویت
+              </span>
+            )}
           </motion.div>
 
           <motion.div
-            className="flex min-w-0 items-center gap-1.5 sm:col-span-2"
-            initial={{ opacity: 0, y: 12 }}
+            className="flex min-w-0 items-center gap-1.5 sm:justify-end"
+            initial={{ opacity: 0, x: 18 }}
             transition={{ ...transition, delay: 0.39 }}
             viewport={viewport}
-            whileInView={{ opacity: 1, y: 0 }}
+            whileInView={{ opacity: 1, x: 0 }}
           >
             <CalendarDays className="size-3.5 shrink-0 text-muted-foreground" />
 
             <span className="text-muted-foreground text-xs">
-              {"آخرین بروزرسانی:"}
-            </span>
-
-            <span className="text-foreground/70 text-xs">
               {item.lastUpdated}
             </span>
           </motion.div>

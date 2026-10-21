@@ -1,10 +1,11 @@
 "use client";
 
 import { cn } from "cn";
-import { Check, ChevronLeft, Minus, Plus, Trash2 } from "lucide-react";
+import { Check, ChevronLeft, Loader2, Minus, Plus } from "lucide-react";
 import { AnimatePresence } from "motion/react";
 import { useState } from "react";
-import InventoryDisableConfirmation from "@/components/admin/manage-products/inventory/inventory-disable-confirmation";
+import { toast } from "sonner";
+import { adjustStoreInventory } from "@/actions/product";
 import IncreaseQuantityForm from "@/components/admin/manage-products/inventory/inventory-quantity-form";
 import { InventorySelector } from "@/components/admin/manage-products/inventory/inventory-selector";
 import IncreaseSummary from "@/components/admin/manage-products/inventory/inventory-summary";
@@ -18,38 +19,21 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
+import {
+  compareInventoryExpiration,
+  getPriorityInventory,
+} from "@/lib/inventory";
 
 export interface Inventory {
   barcode: string;
+  expirationDateTimestamp: number | null;
+  expiredAt: string;
   id: string;
+  isActive: boolean;
   location: string;
   producedAt: string;
   quantity: number;
 }
-
-const inventories: Inventory[] = [
-  {
-    barcode: "62604562489751",
-    id: "1",
-    location: "انبار اصلی",
-    producedAt: "۱۴۰۵/۰۶/۲۵",
-    quantity: 20,
-  },
-  {
-    barcode: "62604562489751",
-    id: "2",
-    location: "انبار پشتی",
-    producedAt: "۱۴۰۵/۰۶/۲۴",
-    quantity: 12,
-  },
-  {
-    barcode: "62604562489751",
-    id: "3",
-    location: "قفسه فروش",
-    producedAt: "۱۴۰۵/۰۶/۲۳",
-    quantity: 0,
-  },
-];
 
 const reasons = [
   { label: "RECEIVE_STOCK", value: "دریافت بار" },
@@ -78,16 +62,6 @@ const modes = [
     stepClassName: "bg-primary/60",
     value: "کاهش",
   },
-  {
-    buttonClassName:
-      "bg-destructive text-destructive-foreground hover:bg-destructive/90",
-    className:
-      "border-destructive/15 bg-destructive/6 text-destructive hover:bg-destructive/10",
-    icon: <Trash2 className="size-3.5" />,
-    label: "disable",
-    stepClassName: "bg-destructive/60",
-    value: "غیرفعال سازی",
-  },
 ] as const;
 
 export type Reason = (typeof reasons)[number]["label"] | "";
@@ -98,6 +72,107 @@ export type ModeLabel = ModeConfig["label"];
 
 export type ModeValue = ModeConfig["value"];
 
+const errorMessages = {
+  INSUFFICIENT_STOCK: "مقدار کاهش بیشتر از موجودی فعلی است",
+  INVALID_AMOUNT: "مقدار وارد شده معتبر نیست",
+  INVALID_DATA: "دلیل انجام عملیات را انتخاب کنید",
+  NOT_FOUND: "موجودی مورد نظر پیدا نشد",
+  UNAUTHORIZED: "برای انجام این عملیات باید وارد حساب خود شوید",
+} as const;
+
+function getSteps(mode: ModeConfig | undefined) {
+  return [
+    {
+      label: "انتخاب",
+      number: 1,
+    },
+    {
+      label: mode?.value,
+      number: 2,
+    },
+    {
+      label: "تایید",
+      number: 3,
+    },
+  ];
+}
+
+function getIsConfirmStep(step: number) {
+  return step === 3;
+}
+
+function getCanContinue({
+  amount,
+  hasSelectedInventory,
+  mode,
+  reason,
+  selectedQuantity,
+  step,
+}: {
+  amount: number;
+  hasSelectedInventory: boolean;
+  mode: ModeConfig | undefined;
+  reason: Reason;
+  selectedQuantity: number;
+  step: number;
+}) {
+  if (step === 1) {
+    return hasSelectedInventory;
+  }
+
+  if (mode?.label === "decrease" && amount > selectedQuantity) {
+    return false;
+  }
+
+  return Number(amount) > 0 && Boolean(reason);
+}
+
+function runInventoryAction(
+  mode: ModeConfig | undefined,
+  inventoryId: string,
+  amount: number,
+  reason: Reason
+) {
+  return adjustStoreInventory(
+    inventoryId,
+    Number(amount),
+    mode?.label === "increase" ? "increase" : "decrease",
+    reason
+  );
+}
+
+function getSuccessMessage(mode: ModeConfig | undefined) {
+  if (mode?.label === "increase") {
+    return "موجودی افزایش یافت";
+  }
+
+  return "موجودی کاهش یافت";
+}
+
+function ContinueButtonContent({
+  isConfirm,
+  label,
+}: {
+  isConfirm: boolean;
+  label: string;
+}) {
+  if (isConfirm) {
+    return (
+      <>
+        <Check className="size-3.5" />
+        {label}
+      </>
+    );
+  }
+
+  return (
+    <>
+      ادامه
+      <ChevronLeft className="size-3.5" />
+    </>
+  );
+}
+
 export default function ManageInventoryDialog({
   item,
   mode,
@@ -107,50 +182,65 @@ export default function ManageInventoryDialog({
 }) {
   const [open, setOpen] = useState(false);
   const [step, setStep] = useState<number>(1);
+  const [isSubmitting, setIsSubmitting] = useState(false);
   const [selectedInventory, setSelectedInventory] = useState<string | null>(
     null
   );
   const [amount, setAmount] = useState<number>(1);
   const [reason, setReason] = useState<Reason>("");
 
+  const inventories: Inventory[] = item.inventories.map((inventory) => ({
+    barcode: inventory.barcode,
+    expirationDateTimestamp: inventory.expirationDateTimestamp,
+    expiredAt: inventory.expirationDate,
+    id: inventory.id,
+    isActive: inventory.isActive,
+    location: inventory.location,
+    producedAt: inventory.productionDate,
+    quantity: inventory.quantity,
+  }));
+
   const currentMode = modes.find((modeItem) => modeItem.label === mode);
 
-  const steps =
-    currentMode?.label === "disable"
-      ? [
-          {
-            label: "انتخاب",
-            number: 1,
-          },
-          {
-            label: "تایید",
-            number: 2,
-          },
-        ]
-      : [
-          {
-            label: "انتخاب",
-            number: 1,
-          },
-          {
-            label: currentMode?.value,
-            number: 2,
-          },
-          {
-            label: "تایید",
-            number: 3,
-          },
-        ];
+  const availableInventories = inventories
+    .filter((inventory) => inventory.isActive)
+    .sort(compareInventoryExpiration);
 
-  const selected = inventories.find(
+  const priorityInventory = getPriorityInventory(
+    currentMode?.label === "decrease"
+      ? availableInventories.filter((inventory) => inventory.quantity > 0)
+      : availableInventories
+  );
+
+  const steps = getSteps(currentMode);
+
+  const selected = availableInventories.find(
     (inventory) => inventory.id === selectedInventory
   );
 
   const newQuantity =
-    selected && amount
-      ? selected.quantity +
-        (currentMode?.label === "increase" ? Number(amount) : -Number(amount))
+    selected &&
+    amount &&
+    (currentMode?.label === "increase" || currentMode?.label === "decrease")
+      ? Math.max(
+          0,
+          selected.quantity +
+            (currentMode.label === "increase"
+              ? Number(amount)
+              : -Number(amount))
+        )
       : null;
+
+  const canContinue = getCanContinue({
+    amount,
+    hasSelectedInventory: Boolean(selectedInventory),
+    mode: currentMode,
+    reason,
+    selectedQuantity: selected?.quantity ?? 0,
+    step,
+  });
+
+  const isConfirm = getIsConfirmStep(step);
 
   const reset = () => {
     setStep(1);
@@ -167,30 +257,36 @@ export default function ManageInventoryDialog({
     }
   };
 
-  const canContinue =
-    step === 1
-      ? !!selectedInventory
-      : // biome-ignore lint/style/noNestedTernary: CHECK LATER
-        currentMode?.label === "disable"
-        ? true
-        : Number(amount) > 0 &&
-          !!reason &&
-          (currentMode?.label !== "decrease" ||
-            Number(amount) <= (selected?.quantity ?? 0));
-
-  const isLastStep = currentMode?.label === "disable" ? step === 2 : step === 3;
-
-  const handleContinue = () => {
-    if (isLastStep) {
-      setOpen(false);
-      reset();
-      return;
-    }
-    if (!canContinue) {
+  const handleContinue = async () => {
+    if (!(canContinue && selectedInventory) || isSubmitting) {
       return;
     }
 
-    setStep((current) => Math.min(current + 1, 3));
+    if (!isConfirm) {
+      setStep((current) => Math.min(current + 1, 3));
+      return;
+    }
+
+    setIsSubmitting(true);
+
+    const result = await runInventoryAction(
+      currentMode,
+      selectedInventory,
+      amount,
+      reason
+    );
+
+    setIsSubmitting(false);
+
+    if (!result.success) {
+      toast.error(errorMessages[result.error]);
+      return;
+    }
+
+    toast.success(getSuccessMessage(currentMode));
+
+    setOpen(false);
+    reset();
   };
 
   const previousStep = () => {
@@ -206,6 +302,7 @@ export default function ManageInventoryDialog({
               "h-9 rounded-xl border px-3 text-xs",
               currentMode?.className
             )}
+            disabled={availableInventories.length === 0}
             variant="ghost"
           >
             {currentMode?.icon}
@@ -262,7 +359,7 @@ export default function ManageInventoryDialog({
                       {completed ? (
                         <Check className="size-3.5" />
                       ) : (
-                        itemStep.number
+                        itemStep.number.toLocaleString("fa-IR")
                       )}
                     </div>
 
@@ -300,13 +397,15 @@ export default function ManageInventoryDialog({
             {step === 1 && (
               <InventorySelector
                 currentModeLabel={currentMode?.label as ModeLabel}
-                inventories={inventories}
+                inventories={availableInventories}
+                itemUnit={item.unit}
+                priorityInventoryId={priorityInventory?.id ?? null}
                 selectedInventory={selectedInventory}
                 setSelectedInventory={setSelectedInventory}
               />
             )}
 
-            {step === 2 && currentMode?.label !== "disable" && (
+            {step === 2 && (
               <IncreaseQuantityForm
                 amount={amount}
                 currentModeLabel={currentMode?.label as ModeLabel}
@@ -321,11 +420,7 @@ export default function ManageInventoryDialog({
               />
             )}
 
-            {step === 2 && currentMode?.label === "disable" && (
-              <InventoryDisableConfirmation selected={selected} />
-            )}
-
-            {currentMode?.label !== "disable" && step === 3 && (
+            {step === 3 && (
               <IncreaseSummary
                 amount={amount}
                 currentModeLabel={currentMode?.label as ModeLabel}
@@ -342,7 +437,7 @@ export default function ManageInventoryDialog({
           <div className="mt-4 flex gap-2 border-foreground/6 border-t pt-4">
             <Button
               className="h-9 flex-1 rounded-xl border border-foreground/8 bg-foreground/3 text-xs"
-              // biome-ignore lint/performance/noJsxPropsBind: CHECK LATER
+              // biome-ignore lint/performance/noJsxPropsBind: No performance issue
               onClick={() => {
                 if (step === 1) {
                   setOpen(false);
@@ -361,20 +456,17 @@ export default function ManageInventoryDialog({
                 "h-9 flex-1 rounded-xl text-xs",
                 currentMode?.buttonClassName
               )}
-              disabled={!canContinue}
+              disabled={!canContinue || isSubmitting}
               onClick={handleContinue}
               type="button"
             >
-              {(currentMode?.label === "disable" ? step === 2 : step === 3) ? (
-                <>
-                  <Check className="size-3.5" />
-                  {"تایید "} {currentMode?.value}
-                </>
+              {isSubmitting ? (
+                <Loader2 className="size-3.5 animate-spin" />
               ) : (
-                <>
-                  {"ادامه"}
-                  <ChevronLeft className="size-3.5" />
-                </>
+                <ContinueButtonContent
+                  isConfirm={isConfirm}
+                  label={`تایید ${currentMode?.value ?? ""}`}
+                />
               )}
             </Button>
           </div>

@@ -2,13 +2,16 @@
 
 import { ShoppingCart } from "lucide-react";
 import { motion } from "motion/react";
-import { useState } from "react";
 import { Button } from "@/components/ui/button";
 
-const categories = [
+export const productFilterCategories = [
   {
     label: "ALL",
     value: "همه",
+  },
+  {
+    label: "FOOD",
+    value: "مواد غذایی",
   },
   {
     label: "DAIRY",
@@ -21,10 +24,6 @@ const categories = [
   {
     label: "SNACKS",
     value: "تنقلات",
-  },
-  {
-    label: "FOOD",
-    value: "مواد غذایی",
   },
   {
     label: "SANITARY",
@@ -42,18 +41,14 @@ const statuses = [
     value: "موجود",
   },
   {
-    label: "LOW_STOCK",
-    value: "کم موجود",
-  },
-  {
-    label: "DISABLE",
-    value: "غیرفعال",
+    label: "OUT_OF_STOCK",
+    value: "ناموجود",
   },
 ] as const;
 
-type Category = (typeof categories)[number]["label"];
+export type Category = (typeof productFilterCategories)[number]["label"];
 
-type Status = (typeof statuses)[number]["label"];
+export type Status = (typeof statuses)[number]["label"];
 
 const itemVariants = {
   hidden: {
@@ -66,10 +61,19 @@ const itemVariants = {
   },
 };
 
-export default function ProductFilters() {
-  const [activeCategory, setActiveCategory] = useState<Category>("ALL");
-  const [activeStatus, setActiveStatus] = useState<Status>("ALL");
-
+export default function ProductFilters({
+  activeCategory,
+  activeStatus,
+  onCategoryChange,
+  onStatusChange,
+  productCount,
+}: {
+  activeCategory: Category;
+  activeStatus: Status;
+  onCategoryChange: (category: Category) => void;
+  onStatusChange: (status: Status) => void;
+  productCount: number;
+}) {
   return (
     <motion.div
       animate="visible"
@@ -96,7 +100,7 @@ export default function ProductFilters() {
           },
         }}
       >
-        {categories.map((category) => {
+        {productFilterCategories.map((category) => {
           const active = activeCategory === category.label;
 
           return (
@@ -115,7 +119,7 @@ export default function ProductFilters() {
                     : "border border-foreground/8 bg-card/4.5 text-muted-foreground hover:border-foreground/15 hover:bg-card/8 hover:text-foreground"
                 }`}
                 // biome-ignore lint/performance/noJsxPropsBind: No problem for performance
-                onClick={() => setActiveCategory(category.label)}
+                onClick={() => onCategoryChange(category.label)}
               >
                 {active && (
                   <motion.span
@@ -169,7 +173,7 @@ export default function ProductFilters() {
                       : "border border-foreground/8 bg-card/4.5 text-muted-foreground hover:border-foreground/15 hover:bg-card/8 hover:text-foreground"
                   }`}
                   // biome-ignore lint/performance/noJsxPropsBind: No problem for performance
-                  onClick={() => setActiveStatus(status.label)}
+                  onClick={() => onStatusChange(status.label)}
                 >
                   {active && (
                     <motion.span
@@ -207,7 +211,9 @@ export default function ProductFilters() {
             <span className="text-xs">{"محصولات"}</span>
           </div>
 
-          <span className="font-bold text-sm">{"۱۵"}</span>
+          <span className="font-bold text-sm">
+            {productCount.toLocaleString("fa-IR")}
+          </span>
         </motion.div>
       </div>
     </motion.div>

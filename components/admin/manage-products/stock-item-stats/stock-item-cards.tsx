@@ -9,17 +9,17 @@ export default function StockItemCards({
   inventories: InventoryRecord[];
   item: StockItem;
 }) {
-  const totalQuantity = inventories.reduce(
+  const activeInventories = inventories.filter(
+    (inventory) => inventory.isActive
+  );
+
+  const totalQuantity = activeInventories.reduce(
     (total, inventory) => total + inventory.quantity,
     0
   );
 
-  const activeInventories = inventories.filter(
-    (inventory) => inventory.quantity > 0
-  );
-
   const locationsCount = new Set(
-    inventories.map((inventory) => inventory.location)
+    activeInventories.map((inventory) => inventory.location)
   ).size;
 
   return (
@@ -32,9 +32,9 @@ export default function StockItemCards({
           </div>
 
           <p className="mt-1.5 font-bold text-lg tabular-nums">
-            {totalQuantity}
+            {totalQuantity.toLocaleString("fa-IR")}
             <span className="mr-1 font-normal text-muted-foreground text-xs">
-              {item.unit ?? "عدد"}
+              {item.unit}
             </span>
           </p>
         </div>
@@ -46,7 +46,7 @@ export default function StockItemCards({
           </div>
 
           <p className="mt-1.5 font-bold text-foreground text-lg tabular-nums">
-            {activeInventories.length}
+            {activeInventories.length.toLocaleString("fa-IR")}
           </p>
         </div>
 
@@ -57,7 +57,7 @@ export default function StockItemCards({
           </div>
 
           <p className="mt-1.5 font-bold text-foreground text-lg tabular-nums">
-            {locationsCount}
+            {locationsCount.toLocaleString("fa-IR")}
           </p>
         </div>
 

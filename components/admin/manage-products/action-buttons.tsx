@@ -1,5 +1,6 @@
 "use client";
 import ManageInventoryDialog from "@/components/admin/manage-products/inventory/manage-inventory-dialog";
+import { ProductActiveDialog } from "@/components/admin/manage-products/product-active-dialog";
 import type { StockItem } from "@/components/admin/manage-products/stock-item-card";
 
 export default function ActionButtons({ item }: { item: StockItem }) {
@@ -20,7 +21,7 @@ export default function ActionButtons({ item }: { item: StockItem }) {
 
       <ManageInventoryDialog item={item} mode="decrease" />
 
-      <ManageInventoryDialog item={item} mode="disable" />
+      <ProductActiveDialog item={item} />
     </div>
   );
 }
