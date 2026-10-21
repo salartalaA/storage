@@ -46,14 +46,18 @@ export default function LocationCard({
           <div className="flex items-baseline gap-1">
             <span
               className={cn(
-                "font-bold text-lg text-success",
-                inventory.quantity === 0 && "text-muted-foreground"
+                "font-bold text-lg",
+                inventory.isActive && inventory.quantity > 0
+                  ? "text-success"
+                  : "text-muted-foreground"
               )}
             >
               {inventory.quantity.toLocaleString("fa-IR")}
             </span>
 
-            <span className="text-muted-foreground text-xs">عدد</span>
+            <span className="text-muted-foreground text-xs">
+              {inventory.unit}
+            </span>
           </div>
         </div>
       </div>

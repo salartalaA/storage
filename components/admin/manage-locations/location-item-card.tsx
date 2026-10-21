@@ -73,12 +73,12 @@ export default function LocationItemCard({
           <div className="flex items-center gap-2 text-muted-foreground text-xs">
             <span className="flex items-center gap-1">
               <Package className="h-3.5 w-3.5" />
-              {productCount} محصول
+              {productCount.toLocaleString("fa-IR")} محصول
             </span>
 
             <span className="text-muted-foreground/30">•</span>
 
-            <span>{stockCount} عدد موجودی</span>
+            <span>{stockCount.toLocaleString("fa-IR")} مجموع موجودی</span>
           </div>
         </div>
       </motion.div>

@@ -13,6 +13,23 @@ export async function getStoreLocations() {
   }
 
   const currentStoreLocations = await prisma.location.findMany({
+    include: {
+      inventories: {
+        include: {
+          product: {
+            select: {
+              barcode: true,
+              id: true,
+              title: true,
+              unit: true,
+            },
+          },
+        },
+        orderBy: {
+          createdAt: "desc",
+        },
+      },
+    },
     orderBy: {
       createdAt: "desc",
     },
@@ -22,6 +39,27 @@ export async function getStoreLocations() {
   });
 
   return currentStoreLocations;
+}
+
+export async function getStoreLocationOptions() {
+  const currentStore = await getCurrentStore();
+
+  if (!currentStore) {
+    return [];
+  }
+
+  return prisma.location.findMany({
+    orderBy: {
+      name: "asc",
+    },
+    select: {
+      id: true,
+      name: true,
+    },
+    where: {
+      storeId: currentStore.id,
+    },
+  });
 }
 
 export async function addStoreLocation(data: LocationData) {

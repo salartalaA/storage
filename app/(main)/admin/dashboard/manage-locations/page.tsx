@@ -2,18 +2,18 @@ import { redirect } from "next/navigation";
 import { getCurrentStore } from "@/actions/auth";
 import { getStoreLocations } from "@/actions/location";
 import AdminHeader from "@/components/admin/admin-header";
-import { AddLocationDialog } from "@/components/admin/manage-locations/add-location-dialog";
-import { LocationDetailDialog } from "@/components/admin/manage-locations/location-item-dialog";
-import NoLocationCard from "@/components/admin/manage-locations/no-locations-card";
-import SearchLocation from "@/components/admin/manage-locations/search-location";
+import LocationsExplorer from "@/components/admin/manage-locations/locations-explorer";
+import { formatPersianDate } from "@/lib/date";
 
 export interface LocationInventory {
   barcode: string;
   expirationDate: string;
   id: string;
+  isActive: boolean;
   productionDate: string;
   productName: string;
   quantity: number;
+  unit: string;
   unitPrice: string;
 }
 
@@ -25,29 +25,6 @@ export interface Location {
   stockCount: number;
 }
 
-// Template for locationInventories constant:
-// const locationInventories: Record<string, LocationInventory[]> = {
-//   "locationName": [
-//     {
-//       barcode: "string",
-//       expirationDate: "string",
-//       id: "string",
-//       productionDate: "string",
-//       productName: "string",
-//       quantity: number,
-//       unitPrice: "string",
-//     },
-//   ],
-// };
-
-// Template for locationStats constant:
-// const locationStats: Record<string, { productCount: number; stockCount: number }> = {
-//   "locationName": {
-//     productCount: number,
-//     stockCount: number,
-//   },
-// };
-
 export default async function ManageLocationsPage() {
   const currentStore = await getCurrentStore();
 
@@ -58,38 +35,45 @@ export default async function ManageLocationsPage() {
   const storeLocations = await getStoreLocations();
 
   const locations: Location[] =
-    storeLocations?.map((location) => ({
-      id: location.id,
-      inventories: [],
-      name: location.name,
-      productCount: 0,
-      stockCount: 0,
-    })) || [];
+    storeLocations?.map((location) => {
+      const inventories: LocationInventory[] = location.inventories.map(
+        (inventory) => ({
+          barcode: inventory.product.barcode,
+          expirationDate: formatPersianDate(inventory.expirationDate),
+          id: inventory.id,
+          isActive: inventory.isActive,
+          productionDate: formatPersianDate(inventory.productionDate),
+          productName: inventory.product.title,
+          quantity: inventory.quantity,
+          unit: inventory.product.unit,
+          unitPrice: inventory.unitPrice.toLocaleString("fa-IR"),
+        })
+      );
+
+      const activeInventories = location.inventories.filter(
+        (inventory) => inventory.isActive
+      );
+
+      return {
+        id: location.id,
+        inventories,
+        name: location.name,
+        productCount: new Set(
+          activeInventories.map((inventory) => inventory.product.id)
+        ).size,
+        stockCount: activeInventories.reduce(
+          (total, inventory) => total + inventory.quantity,
+          0
+        ),
+      };
+    }) || [];
 
   return (
     <main className="flex min-h-screen flex-col items-center overflow-hidden px-3">
       <div className="my-6 flex w-full max-w-sm flex-col gap-y-4">
         <AdminHeader />
 
-        <SearchLocation />
-
-        <div className="flex flex-col gap-3">
-          <div className="fade-in slide-in-from-bottom-2 flex animate-in items-center justify-between duration-500">
-            <span className="text-muted-foreground text-xs">
-              {locations.length} مکان
-            </span>
-
-            <AddLocationDialog />
-          </div>
-
-          {locations.length > 0 ? (
-            locations.map((location) => (
-              <LocationDetailDialog key={location.id} location={location} />
-            ))
-          ) : (
-            <NoLocationCard />
-          )}
-        </div>
+        <LocationsExplorer locations={locations} />
       </div>
     </main>
   );

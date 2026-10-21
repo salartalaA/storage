@@ -1,7 +1,10 @@
 "use client";
 
 import { CalendarDays, MapPin, Package, X } from "lucide-react";
-import type { Location } from "@/app/(main)/admin/dashboard/manage-locations/page";
+import type {
+  Location,
+  LocationInventory,
+} from "@/app/(main)/admin/dashboard/manage-locations/page";
 import {
   Dialog,
   DialogClose,
@@ -16,18 +19,18 @@ import { Separator } from "@/components/ui/separator";
 import LocationCard from "./location-card";
 import LocationItemCard from "./location-item-card";
 
-function getQuantityStatus(quantity: number) {
-  if (quantity === 0) {
+function getQuantityStatus(inventory: LocationInventory) {
+  if (!inventory.isActive) {
     return {
       className: "border-foreground/8 bg-foreground/5 text-muted-foreground",
-      label: "ناموجود",
+      label: "غیرفعال",
     };
   }
 
-  if (quantity <= 5) {
+  if (inventory.quantity === 0) {
     return {
-      className: "border-warning/15 bg-warning/8 text-warning",
-      label: "کم موجود",
+      className: "border-foreground/8 bg-foreground/5 text-muted-foreground",
+      label: "ناموجود",
     };
   }
 
@@ -38,14 +41,21 @@ function getQuantityStatus(quantity: number) {
 }
 
 export function LocationDetailDialog({ location }: { location: Location }) {
-  const totalQuantity = location.inventories.reduce(
+  const activeInventories = location.inventories.filter(
+    (inventory) => inventory.isActive
+  );
+
+  const totalQuantity = activeInventories.reduce(
     (total, inventory) => total + inventory.quantity,
     0
   );
 
-  const activeRecords = location.inventories.filter(
-    (inventory) => inventory.quantity > 0
-  ).length;
+  const lastExpirationDate =
+    activeInventories
+      .map((inventory) => inventory.expirationDate)
+      .filter((expirationDate) => expirationDate !== "—")
+      .sort()
+      .at(-1) ?? "—";
 
   return (
     <Dialog>
@@ -99,7 +109,7 @@ export function LocationDetailDialog({ location }: { location: Location }) {
               <p className="mt-1.5 font-bold text-lg">
                 {totalQuantity.toLocaleString("fa-IR")}
                 <span className="mr-1 font-normal text-muted-foreground text-xs">
-                  عدد
+                  مجموع
                 </span>
               </p>
             </div>
@@ -111,7 +121,7 @@ export function LocationDetailDialog({ location }: { location: Location }) {
               </div>
 
               <p className="mt-1.5 font-bold text-foreground text-lg">
-                {activeRecords.toLocaleString("fa-IR")}
+                {activeInventories.length.toLocaleString("fa-IR")}
               </p>
             </div>
 
@@ -133,13 +143,7 @@ export function LocationDetailDialog({ location }: { location: Location }) {
               </div>
 
               <p className="mt-1.5 font-bold text-foreground text-sm">
-                {location.inventories.length > 0
-                  ? location.inventories.reduce((latest, inventory) =>
-                      inventory.expirationDate > latest.expirationDate
-                        ? inventory
-                        : latest
-                    ).expirationDate
-                  : "—"}
+                {lastExpirationDate}
               </p>
             </div>
           </div>
@@ -166,7 +170,7 @@ export function LocationDetailDialog({ location }: { location: Location }) {
           <ScrollArea className="h-[300px] pr-1">
             <div className="flex flex-col gap-2.5 pl-1">
               {location.inventories.map((inventory) => {
-                const status = getQuantityStatus(inventory.quantity);
+                const status = getQuantityStatus(inventory);
 
                 return (
                   <LocationCard
