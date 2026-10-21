@@ -11,6 +11,7 @@
     "format": "biome check --write",
     "lint": "biome check",
     "prepare": "lefthook install",
+    "prod": "pnpm format && pnpm lint && pnpm check-types && pnpm build && pnpm start",
     "start": "next start"
   },
   "dependencies": {
