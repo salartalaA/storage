@@ -49,7 +49,7 @@ export default function AdminHeader() {
             }}
           >
             <h3 className="font-bold text-foreground">
-              {"صبح بخیر، فروشگاه افق کوروش"}
+              {"وقت بخیر، فروشگاه افق کوروش"}
             </h3>
             <div className="mt-1 flex items-center gap-x-2 text-muted-foreground text-xs">
               <Calendar size={14} /> <span>{"شنبه، ۲۲ شهریور ۱۴۰۴"}</span>

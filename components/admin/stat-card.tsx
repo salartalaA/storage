@@ -1,13 +1,10 @@
 import type { LucideIcon } from "lucide-react";
 
-interface StatCardProps {
+export interface StatCardProps {
   description: string;
   icon: LucideIcon;
   iconClass: string;
   title: string;
-  trend: string;
-  trendClass: string;
-  trendIcon: LucideIcon;
   value: string | number;
   valueClass: string;
 }
@@ -16,11 +13,8 @@ export function StatCard({
   title,
   description,
   value,
-  trend,
   icon: Icon,
-  trendIcon: TrendIcon,
   iconClass,
-  trendClass,
   valueClass,
 }: StatCardProps) {
   return (
@@ -34,13 +28,6 @@ export function StatCard({
           >
             <Icon size={19} strokeWidth={2} />
           </span>
-
-          <div
-            className={`flex items-center gap-x-1 rounded-full border border-foreground/5 bg-background/30 px-2 py-1 text-xs sm:backdrop-blur-md ${trendClass}`}
-          >
-            <TrendIcon size={11} strokeWidth={2.5} />
-            <span>{trend}</span>
-          </div>
         </div>
 
         <span

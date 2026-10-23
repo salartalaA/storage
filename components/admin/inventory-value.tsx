@@ -1,36 +1,37 @@
 "use client";
 
 import { motion } from "motion/react";
+import type { ProductCategory } from "@/schema/product";
 
-const inventoryValueData = [
-  {
-    category: "مواد غذایی",
-    color: "bg-primary",
-    value: 112,
-  },
-  {
-    category: "نوشیدنی",
-    color: "bg-success",
-    value: 78,
-  },
-  {
-    category: "بهداشتی",
-    color: "bg-warning",
-    value: 46,
-  },
-  {
-    category: "قنادی",
-    color: "bg-destructive",
-    value: 31,
-  },
-  {
-    category: "سایر",
-    color: "bg-muted-foreground",
-    value: 17,
-  },
-];
+interface InventoryValueData {
+  category: ProductCategory;
+  color: string;
+  value: number;
+}
 
-export default function InventoryValue() {
+export default function InventoryValue({
+  categoryValues,
+}: {
+  categoryValues: Omit<InventoryValueData, "color">[];
+}) {
+  const inventoryValueDatas = [
+    { category: "مواد غذایی", color: "bg-primary" },
+    { category: "لبنیات", color: "bg-success" },
+    { category: "نوشیدنی", color: "bg-warning" },
+    { category: "تنقلات", color: "bg-destructive" },
+    { category: "بهداشتی", color: "bg-muted-foreground" },
+  ].map((item) => ({
+    ...item,
+    value:
+      categoryValues.find((value) => value.category === item.category)?.value ??
+      0,
+  }));
+
+  const maxValue = Math.max(
+    0,
+    ...inventoryValueDatas.map((item) => item.value)
+  );
+
   return (
     <motion.div
       className="group relative overflow-hidden rounded-3xl border border-foreground/8 bg-card/4.5 p-5 shadow-[0_8px_40px_rgba(0,0,0,0.35)] backdrop-blur-[18px] transition-colors duration-300 hover:border-foreground/12 hover:bg-card/6.5 hover:shadow-[0_12px_45px_rgba(0,0,0,0.42)]"
@@ -58,26 +59,20 @@ export default function InventoryValue() {
 
       <div className="relative">
         {/* Header */}
-        <motion.div
+        <motion.h3
           className="mb-5 flex items-center justify-between"
           initial={{ opacity: 0, y: 10 }}
           transition={{ delay: 0.1, duration: 0.4 }}
           viewport={{ once: true }}
           whileInView={{ opacity: 1, y: 0 }}
         >
-          <h3 className="font-semibold text-foreground">
-            {"ارزش موجودی به تفکیک دسته"}
-          </h3>
-
-          <span className="rounded-full border border-foreground/6 bg-background/30 px-2.5 py-1 text-muted-foreground text-xs backdrop-blur-md">
-            {"میلیون تومان"}
-          </span>
-        </motion.div>
+          {"ارزش موجودی به تفکیک دسته"}
+        </motion.h3>
 
         {/* Progress Bars List */}
         <div className="space-y-4">
-          {inventoryValueData.map((item, index) => {
-            const width = `${(item.value / 120) * 100}%`;
+          {inventoryValueDatas.map((item, index) => {
+            const width = `${maxValue === 0 ? 0 : (item.value / maxValue) * 100}%`;
 
             return (
               <motion.div
@@ -96,67 +91,23 @@ export default function InventoryValue() {
                   {item.category}
                 </span>
 
-                <div className="min-w-0 flex-1">
-                  <div className="flex items-center gap-2">
-                    <div className="h-3 min-w-0 flex-1 overflow-hidden rounded-full bg-muted/20">
-                      <motion.div
-                        className={`h-full max-w-full rounded-full ${item.color}`}
-                        initial={{ width: 0 }}
-                        transition={{
-                          delay: 0.2 + index * 0.06,
-                          duration: 0.8,
-                          ease: [0.16, 1, 0.3, 1],
-                        }}
-                        viewport={{ once: true }}
-                        whileInView={{ width }}
-                      />
-                    </div>
-
-                    <span className="w-10 shrink-0 text-left font-medium text-[10px] text-foreground">
-                      {item.value} م.ت
-                    </span>
-                  </div>
+                <div className="h-3 min-w-0 flex-1 overflow-hidden rounded-full bg-muted/20">
+                  <motion.div
+                    className={`h-full max-w-full rounded-full ${item.color}`}
+                    initial={{ width: 0 }}
+                    transition={{
+                      delay: 0.2 + index * 0.06,
+                      duration: 0.8,
+                      ease: [0.16, 1, 0.3, 1],
+                    }}
+                    viewport={{ once: true }}
+                    whileInView={{ width }}
+                  />
                 </div>
               </motion.div>
             );
           })}
         </div>
-
-        {/* Axis Ticks */}
-        <motion.div
-          className="mt-3 flex items-center gap-3"
-          initial={{ opacity: 0 }}
-          transition={{ delay: 0.45, duration: 0.4 }}
-          viewport={{ once: true }}
-          whileInView={{ opacity: 1 }}
-        >
-          <span className="w-16 shrink-0" />
-
-          <div className="flex min-w-0 flex-1 justify-between pe-12 text-muted-foreground/50 text-xs">
-            <span>{"۰ م.ت"}</span>
-            <span>{"۳۰ م.ت"}</span>
-            <span>{"۶۰ م.ت"}</span>
-            <span>{"۹۰ م.ت"}</span>
-            <span>{"۱۲۰ م.ت"}</span>
-          </div>
-        </motion.div>
-
-        {/* Footer */}
-        <motion.div
-          className="mt-4 flex items-center justify-between border-border/50 border-t pt-3"
-          initial={{ opacity: 0, y: 10 }}
-          transition={{ delay: 0.5, duration: 0.4 }}
-          viewport={{ once: true }}
-          whileInView={{ opacity: 1, y: 0 }}
-        >
-          <span className="text-muted-foreground text-xs">
-            {"بیشترین ارزش موجودی"}
-          </span>
-
-          <span className="font-semibold text-foreground text-xs">
-            {"مواد غذایی · ۱۱۲ م.ت"}
-          </span>
-        </motion.div>
       </div>
     </motion.div>
   );

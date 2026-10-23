@@ -91,6 +91,8 @@ export type ProductUnit = (typeof productUnits)[number];
 
 export type ProductData = z.infer<typeof productSchema>;
 
+export type ProductCategory = (typeof productCategories)[number];
+
 export type ProductInventoryData = z.infer<typeof productInventorySchema>;
 
 export type ProductInventoryState = z.infer<typeof productInventoryStateSchema>;

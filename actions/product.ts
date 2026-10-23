@@ -700,3 +700,77 @@ export async function adjustStoreInventory(
     success: true,
   };
 }
+
+export async function getInventories() {
+  const currentStore = await getCurrentStore();
+
+  if (!currentStore) {
+    return null;
+  }
+
+  const categoryData = await prisma.inventory.findMany({
+    select: {
+      product: {
+        select: {
+          category: true,
+        },
+      },
+      quantity: true,
+      unitPrice: true,
+    },
+
+    where: {
+      isActive: true,
+      product: {
+        isActive: true,
+        storeId: currentStore.id,
+      },
+    },
+  });
+
+  return categoryData;
+}
+
+export async function getExpiringInventories() {
+  const currentStore = await getCurrentStore();
+
+  if (!currentStore) {
+    return null;
+  }
+
+  return prisma.inventory.findMany({
+    orderBy: {
+      expirationDate: "asc",
+    },
+
+    select: {
+      expirationDate: true,
+      id: true,
+      isActive: true,
+      product: {
+        select: {
+          title: true,
+          unit: true,
+        },
+      },
+      quantity: true,
+    },
+
+    where: {
+      expirationDate: {
+        not: null,
+      },
+
+      isActive: true,
+
+      product: {
+        isActive: true,
+        storeId: currentStore.id,
+      },
+
+      quantity: {
+        gt: 0,
+      },
+    },
+  });
+}
